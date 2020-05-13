@@ -5,62 +5,21 @@ import pyabc
 import tempfile
 from sklearn.kernel_approximation import Nystroem
 from sklearn.preprocessing import MinMaxScaler
-from GeneralRandom import GeneralRandom
 import glob
 from scipy import stats
 import pandas as pd
 
-def fit_cmd(catalog, sim_dict, imf_type, pop_size, max_n_pop, savename):
+from .generalrandom import GeneralRandom
+from .distributions import *
 
-	with bz2.BZ2File(catalog,'rb') as f: 
-		catalog = pickle.load(f) 
-
-	if isinstance(sim_dict, str):
-		with bz2.BZ2File(sim_dict, 'rb') as f: 
-			simdict = pickle.load(f) 
-	
-	elif isinstance(sim_dict, list):
-		with bz2.BZ2File(sim_dict,'rb') as f: 
-			simdict = pickle.load(f)
-
-		simdict['outmag1'] = simdict['Output Mags'][:,0]
-		simdict['outmag2'] = simdict['Output Mags'][:,1]
-
-		for kk in range(len(sim_dict) - 1):
-			with bz2.BZ2File(sim_dict[kk + 1]) as f: 
-				t_simdict = pickle.load(f)
-				t_simdict['outmag1'] = t_simdict['Output Mags'][:,0]
-				t_simdict['outmag2'] = t_simdict['Output Mags'][:,1]
-			for key in simdict.keys():
-				simdict[key] = np.append(simdict[key], t_simdict[key])
-
-		simdict['Output Mags'] = np.vstack((simdict['outmag1'],simdict['outmag2'])).T
-
-		del simdict['outmag1']
-		del simdict['outmag2']
-		del simdict['Input Mags']
-
-	simdict['output_mag1'] = simdict['Output Mags'][:, 0]
-
-	simdict['output_mag2'] = simdict['Output Mags'][:, 1]
-
-	del simdict['Output Mags']
-	del simdict['Input Mags']
-
-	simdf = pd.DataFrame.from_dict(simdict)
-
-	l_logm = np.min(simdict['logM'])
-	u_logm = np.max(simdict['logM'])
-
-
-	   ############# EVERYTHING BELOW THIS SHOULD BE ABSTRACTED
+def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename):
 
 	def make_cmd(mags):
 		return np.asarray( [mags[:,0] - mags[:,1], mags[:,0]] ).T
 
 	base_weights = 1 / simdf['MassProb'] / simdf['BinProb']
 
-	def get_cmd(nstars, gr_dict, simdict):
+	def get_cmd(nstars, gr_dict, simdf):
 		
 		weights = base_weights
 
@@ -96,7 +55,7 @@ def fit_cmd(catalog, sim_dict, imf_type, pop_size, max_n_pop, savename):
 		intensity = 10**params['log_intensity']
 		nstars = int(stats.poisson.rvs(intensity))
 		
-		noisymags = get_cmd(nstars, gr_dict, simdict)
+		noisymags = get_cmd(nstars, gr_dict, simdf)
 		j = noisymags 
 		return np.asarray([j[:,0] - j[:,1], j[:,0]]).T
 
@@ -120,19 +79,13 @@ def fit_cmd(catalog, sim_dict, imf_type, pop_size, max_n_pop, savename):
 		return np.sqrt(PP + QQ - 2 * PQ)
 
 
-	   ############# EVERYTHING ABOVE THIS SHOULD BE ABSTRACTED
-
-	mag1 = catalog['dat_mag1']
-	mag2 = catalog['dat_mag2']
-	flag = catalog['dat_det']
-	mag1 = mag1[flag]
-	mag2 = mag2[flag]
-
-	observed_cmd = make_cmd(np.vstack((mag1,mag2)).T)
+	  ############# EVERYTHING ABOVE THIS SHOULD BE ABSTRACTED
 
 	cmd_scaler = MinMaxScaler()
 	cmd_scaler.fit(observed_cmd);
 	scaled_observed_cmd = cmd_scaler.transform(observed_cmd)
+
+	plt.scatter(observed_cmd[:, 0], observed_cmd[:,1])
 
 	obs = dict(data = scaled_observed_cmd)
 
@@ -153,6 +106,12 @@ def fit_cmd(catalog, sim_dict, imf_type, pop_size, max_n_pop, savename):
 			return {'data':  dummy_cmd}
 		simulated_cmd = sample_norm_cmd(params, model = 'ln')
 		return {'data': simulated_cmd}
+
+
+	simcmd = sample_cmd(dict(slope = -2.3, binfrac = 0.2, log_intensity = 4), model = 'spl')
+	plt.scatter(simcmd[:,0], simcmd[:,1])
+	plt.gca().invert_yaxis()
+	plt.show()
 
 	R = np.random.uniform(0, 1, (len(observed_cmd),2))
 	Phi_approx = Nystroem(kernel = 'rbf', n_components=50, gamma = 200) 
