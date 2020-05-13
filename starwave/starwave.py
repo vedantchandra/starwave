@@ -12,7 +12,7 @@ import pandas as pd
 from .generalrandom import GeneralRandom
 from .distributions import *
 
-def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename):
+def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, gamma = 200):
 
 	def make_cmd(mags):
 		return np.asarray( [mags[:,0] - mags[:,1], mags[:,0]] ).T
@@ -114,7 +114,7 @@ def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename):
 	plt.show()
 
 	R = np.random.uniform(0, 1, (len(observed_cmd),2))
-	Phi_approx = Nystroem(kernel = 'rbf', n_components=50, gamma = 200) 
+	Phi_approx = Nystroem(kernel = 'rbf', n_components=50, gamma = gamma) 
 	Phi_approx.fit(R)
 
 	def distance(cmd1, cmd2):
