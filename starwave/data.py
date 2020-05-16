@@ -46,6 +46,7 @@ class MagData:
 		self.mags = mags
 		self.names = names
 		self.data = pandas.DataFrame(self.mags, columns = self.names);
+		print('catalog loaded!')
 
 class SimTable:
 	def __init__(self, **kwargs):
@@ -54,10 +55,12 @@ class SimTable:
 	def load_simdict(self, sim_dict):
 		if isinstance(sim_dict, str):
 			with bz2.BZ2File(sim_dict, 'rb') as f: 
+				print('loading dictionary...')
 				simdict = pickle.load(f) 
 	
 		elif isinstance(sim_dict, list):
 			with bz2.BZ2File(sim_dict,'rb') as f: 
+				print('loading first dictionary...')
 				simdict = pickle.load(f)
 
 			simdict['outmag1'] = simdict['Output Mags'][:,0]
@@ -70,6 +73,7 @@ class SimTable:
 					t_simdict['outmag2'] = t_simdict['Output Mags'][:,1]
 				for key in simdict.keys():
 					simdict[key] = np.append(simdict[key], t_simdict[key])
+				print('adding additional dictionary...')
 
 			simdict['Output Mags'] = np.vstack((simdict['outmag1'],simdict['outmag2'])).T
 
@@ -85,3 +89,4 @@ class SimTable:
 		del simdict['Input Mags']
 
 		self.simdf = pandas.DataFrame.from_dict(simdict)
+		print('simulation dataframe loaded!')

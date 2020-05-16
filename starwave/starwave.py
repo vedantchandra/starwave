@@ -5,6 +5,7 @@ import pyabc
 import tempfile
 from sklearn.kernel_approximation import Nystroem
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KDTree
 import glob
 from scipy import stats
 import pandas as pd
@@ -12,7 +13,20 @@ import pandas as pd
 from .generalrandom import GeneralRandom
 from .distributions import *
 
-def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, gamma = 200):
+prior_spl = pyabc.Distribution(slope = pyabc.RV("uniform", -4, 4),
+						binfrac = pyabc.RV("uniform", 0, 1),
+						  log_intensity = pyabc.RV("uniform", 2, 3))
+
+prior_bpl = pyabc.Distribution(alow = pyabc.RV("uniform", -2, 2), ahigh = pyabc.RV("uniform", -3, 2),
+						split = pyabc.RV("uniform", 0.2, 0.8), binfrac = pyabc.RV("uniform", 0, 1),
+						  log_intensity = pyabc.RV("uniform", 2, 3))
+
+prior_ln = pyabc.Distribution(mean = pyabc.RV("uniform", 0.1, 0.7,), \
+		width = pyabc.RV("uniform", 0, 1),  slope = pyabc.RV("uniform", -3, 2),
+				transition = pyabc.RV("uniform", 0.8, 0.4), binfrac = pyabc.RV("uniform", 0, 1),
+				log_intensity = pyabc.RV("uniform", 2, 3))
+
+def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001):
 
 	def make_cmd(mags):
 		return np.asarray( [mags[:,0] - mags[:,1], mags[:,0]] ).T
@@ -70,7 +84,7 @@ def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, gamma 
 		Phi_Q = mapping(Q).sum(axis=0)
 		return np.sqrt(np.sum((Phi_P - Phi_Q)**2))
 
-	def exact_kernel_distance(P, Q, gamma = 1):
+	def exact_kernel_distance(P, Q, gamma):
 		P = P[np.max(np.isfinite(P),1)]
 		Q = Q[np.max(np.isfinite(Q),1)]
 		PP = np.exp(- gamma*np.sum((P[:, None, :] - P[None, :, :])**2, axis=-1)).sum()
@@ -81,11 +95,20 @@ def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, gamma 
 
 	  ############# EVERYTHING ABOVE THIS SHOULD BE ABSTRACTED
 
+	sigmacorr = 3
+
 	cmd_scaler = MinMaxScaler()
 	cmd_scaler.fit(observed_cmd);
 	scaled_observed_cmd = cmd_scaler.transform(observed_cmd)
 
-	plt.scatter(observed_cmd[:, 0], observed_cmd[:,1])
+	KDT = KDTree(scaled_observed_cmd)
+	dd, ind = KDT.query(scaled_observed_cmd, k=2)
+	avmindist = np.mean(dd[:,1])
+	sigma = sigmacorr*avmindist
+	gamma = 0.5/(sigma**2)
+	print('setting kernel gamma = %.1f'%gamma)
+
+	# plt.scatter(observed_cmd[:, 0], observed_cmd[:,1])
 
 	obs = dict(data = scaled_observed_cmd)
 
@@ -108,10 +131,10 @@ def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, gamma 
 		return {'data': simulated_cmd}
 
 
-	simcmd = sample_cmd(dict(slope = -2.3, binfrac = 0.2, log_intensity = 4), model = 'spl')
-	plt.scatter(simcmd[:,0], simcmd[:,1])
-	plt.gca().invert_yaxis()
-	plt.show()
+	# simcmd = sample_cmd(dict(slope = -2.3, binfrac = 0.2, log_intensity = 4), model = 'spl')
+	# plt.scatter(simcmd[:,0], simcmd[:,1])
+	# plt.gca().invert_yaxis()
+	# plt.show()
 
 	R = np.random.uniform(0, 1, (len(observed_cmd),2))
 	Phi_approx = Nystroem(kernel = 'rbf', n_components=50, gamma = gamma) 
@@ -122,19 +145,6 @@ def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, gamma 
 			print('nan!')
 		else:
 			return approx_kernel_distance(cmd1['data'], cmd2['data'], Phi_approx.transform)
-
-	prior_spl = pyabc.Distribution(slope = pyabc.RV("uniform", -4, 4),
-							binfrac = pyabc.RV("uniform", 0, 1),
-							  log_intensity = pyabc.RV("uniform", 2, 3))
-
-	prior_bpl = pyabc.Distribution(alow = pyabc.RV("uniform", -2, 2), ahigh = pyabc.RV("uniform", -3, 2),
-							split = pyabc.RV("uniform", 0.2, 0.8), binfrac = pyabc.RV("uniform", 0, 1),
-							  log_intensity = pyabc.RV("uniform", 2, 3))
-
-	prior_ln = pyabc.Distribution(mean = pyabc.RV("uniform", 0.1, 0.7,), \
-			width = pyabc.RV("uniform", 0, 1),  slope = pyabc.RV("uniform", -3, 2),
-					transition = pyabc.RV("uniform", 0.8, 0.4), binfrac = pyabc.RV("uniform", 0, 1),
-					log_intensity = pyabc.RV("uniform", 2, 3))
 
 	if imf_type is 'spl':
 		simulator = cmd_sim_spl
@@ -155,6 +165,6 @@ def fit_cmd(observed_cmd, simdf, imf_type, pop_size, max_n_pop, savename, gamma 
 
 	abc.new(db_path, {'data': obs['data']});
 
-	history = abc.run(min_acceptance_rate = 0.001, max_nr_populations = max_n_pop)
+	history = abc.run(min_acceptance_rate = min_acceptance_rate, max_nr_populations = max_n_pop)
 
 	return history
