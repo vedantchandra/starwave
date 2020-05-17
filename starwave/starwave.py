@@ -165,7 +165,7 @@ class FitCMD:
 
 		return history
 
-	def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25):
+	def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35):
 
 		if imf_type is 'spl':
 			simulator = self.cmd_sim_spl
@@ -181,8 +181,12 @@ class FitCMD:
 		self.cmd_scaler.fit(observed_cmd)
 
 		cmds = [self.cmd_scaler.inverse_transform(simulator(sample)['data']) for _,sample in post_samples.iterrows()]
+		if kde:
+			return plot_lfs_kde(cmds)
+		else:
+			return plot_lfs(cmds, n_bins = n_bins)
 
-		return plot_lfs(cmds)
+	#def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, n_bins = 35):
 
 
 	def load_history(self, dbpath, id):
