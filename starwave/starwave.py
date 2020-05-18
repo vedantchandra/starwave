@@ -34,6 +34,12 @@ class FitCMD:
 		self.simdf = simdf
 		self.base_weights = 1 / self.simdf['MassProb'] / self.simdf['BinProb']
 
+	def init_scaler(self, observed_cmd):
+		self.cmd_scaler = MinMaxScaler()
+		self.cmd_scaler.fit(observed_cmd);
+		scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
+		return scaled_observed_cmd
+
 	def get_cmd(self, nstars, gr_dict, simdf):
 		
 		weights = self.base_weights
@@ -100,31 +106,32 @@ class FitCMD:
 		return {'data': simulated_cmd}
 
 	def cmd_sim_bpl(self, params):
-		if params['ahigh'] > params['alow']:
-			return {'data': dummy_cmd}
+		# if params['ahigh'] > params['alow']:
+		# 	return {'data': dummy_cmd}
 		simulated_cmd = self.sample_norm_cmd(params, model = 'bpl')
 		return {'data': simulated_cmd}
 
 	def cmd_sim_ln(self, params):
-		if params['transition'] < params['mean']:
-			return {'data':  dummy_cmd}
+		# if params['transition'] < params['mean']:
+		# 	return {'data':  dummy_cmd}
 		simulated_cmd = self.sample_norm_cmd(params, model = 'ln')
 		return {'data': simulated_cmd}
 
-	def fit_cmd(self, observed_cmd, imf_type, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001):
+	def fit_cmd(self, observed_cmd, imf_type, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001, gamma = 'heuristic'):
 
 		sigmacorr = 3
 
-		self.cmd_scaler = MinMaxScaler()
-		self.cmd_scaler.fit(observed_cmd);
-		scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
+		scaled_observed_cmd = self.init_scaler(observed_cmd)
 
-		KDT = KDTree(scaled_observed_cmd)
-		dd, ind = KDT.query(scaled_observed_cmd, k=2)
-		avmindist = np.mean(dd[:,1])
-		sigma = sigmacorr*avmindist
-		gamma = 0.5/(sigma**2)
-		print('setting kernel gamma = %.1f'%gamma)
+		if not isinstance(gamma, str):
+			gamma = gamma
+		elif gamma == 'heuristic':
+			KDT = KDTree(scaled_observed_cmd)
+			dd, ind = KDT.query(scaled_observed_cmd, k=2)
+			avmindist = np.mean(dd[:,1])
+			sigma = sigmacorr*avmindist
+			gamma = 0.5/(sigma**2)
+			print('setting kernel gamma = %.1f'%gamma)
 
 		# plt.scatter(observed_cmd[:, 0], observed_cmd[:,1])
 
@@ -165,7 +172,7 @@ class FitCMD:
 
 		return history
 
-	def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25):
+	def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
 
 		if imf_type is 'spl':
 			simulator = self.cmd_sim_spl
@@ -181,8 +188,14 @@ class FitCMD:
 		self.cmd_scaler.fit(observed_cmd)
 
 		cmds = [self.cmd_scaler.inverse_transform(simulator(sample)['data']) for _,sample in post_samples.iterrows()]
+		if kde:
+			return plot_lfs_kde(cmds)
+		else:
+			if color:
+				return plot_lfs(cmds, n_bins = n_bins, axis = 1), plot_lfs(cmds, n_bins = n_bins, axis = 0)
+			return plot_lfs(cmds, n_bins = n_bins)
 
-		return plot_lfs(cmds)
+	#def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, n_bins = 35):
 
 
 	def load_history(self, dbpath, id):
