@@ -27,20 +27,19 @@ def plot_lfs_kde(cmd_list):
 		g.plot_1d(cmd_samples, 'mag', colors = [colors[ct]])
 		ct+=1
 
-def plot_lfs(cmd_list, n_bins):
+def plot_lfs(cmd_list, n_bins = 35, axis = 1):
 	f = plt.figure(figsize = (8,5))
 	cmd = cmd_list[0]
-	mag = cmd[:,1]
+	mag = cmd[:, axis]
 	bins = stats.binned_statistic(mag, mag, statistic = 'count', bins = n_bins)
 	lf = bins.statistic
 	binedges = bins.bin_edges
 	mags = bins.bin_edges[:-1] + ((bins.bin_edges[1] - bins.bin_edges[0])/2)
 
 	plt.plot(mags, lf, 'k')
-	
 	model_lfs = [];
 	for cmd in cmd_list[1:]:
-		mag = cmd[:,1]
+		mag = cmd[:, axis]
 		bins = stats.binned_statistic(mag, mag, statistic = 'count', bins = binedges)
 		lf = bins.statistic
 		model_lfs.append(lf)
