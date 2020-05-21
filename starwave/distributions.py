@@ -1,7 +1,7 @@
 import numpy as np
 from .generalrandom import GeneralRandom
-l_logm = -1.897
-u_logm = 2.06
+l_logm = -2.1
+u_logm = 2.1
 
 def set_GR_spl(slope):
 		x = np.linspace(l_logm,u_logm,1000)
