@@ -1,0 +1,15 @@
+name: starwave
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - scikit-learn
+  - python
+  - scipy
+  - pandas
+  - matplotlib
+  - numpy
+  - nb_conda
+  - jupyter
+prefix: /Users/vedantchandra/opt/anaconda3/envs/starwave
+
