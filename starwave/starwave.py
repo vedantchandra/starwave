@@ -149,13 +149,13 @@ class FitCMD:
 			else:
 				return self.approx_kernel_distance(cmd1['data'], cmd2['data'], Phi_approx.transform)
 
-		if imf_type is 'spl':
+		if imf_type == 'spl':
 			simulator = self.cmd_sim_spl
 			prior = prior_spl
-		elif imf_type is 'bpl':
+		elif imf_type == 'bpl':
 			simulator = self.cmd_sim_bpl
 			prior = prior_bpl
-		elif imf_type is 'ln':
+		elif imf_type == 'ln':
 			simulator = self.cmd_sim_ln
 			prior = prior_ln
 
@@ -174,11 +174,11 @@ class FitCMD:
 
 	def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
 
-		if imf_type is 'spl':
+		if imf_type == 'spl':
 			simulator = self.cmd_sim_spl
-		elif imf_type is 'bpl':
+		elif imf_type == 'bpl':
 			simulator = self.cmd_sim_bpl
-		elif imf_type is 'ln':
+		elif imf_type == 'ln':
 			simulator = self.cmd_sim_ln
 
 		idxs = np.arange(len(df))
