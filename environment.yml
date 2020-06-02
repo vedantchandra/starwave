@@ -11,5 +11,9 @@ dependencies:
   - numpy
   - nb_conda
   - jupyter
+  - pip
+  - pip:
+    - pyabc
+    - getdist
 prefix: /Users/vedantchandra/opt/anaconda3/envs/starwave
 
