@@ -117,21 +117,32 @@ class FitCMD:
 		simulated_cmd = self.sample_norm_cmd(params, model = 'ln')
 		return {'data': simulated_cmd}
 
-	def fit_cmd(self, observed_cmd, imf_type, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001, gamma = 'heuristic'):
+	def fit_cmd(self, observed_cmd, imf_type, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001, gamma = 0.5, 
+					cores = 1):
 
-		sigmacorr = 3
+		
+		if cores == 1:
+			pyabc_sampler = pyabc.sampler.SingleCoreSampler()
+		elif cores > 1:
+			pyabc_sampler = pyabc.sampler.MulticoreParticleParallelSampler(n_procs = cores)
+		else:
+			print('invalid number of cores. defaulting to 1 core.')
+			pyabc_sampler = pyabc.sampler.SingleCoreSampler()
+
 
 		scaled_observed_cmd = self.init_scaler(observed_cmd)
 
-		if not isinstance(gamma, str):
-			gamma = gamma
-		elif gamma == 'heuristic':
-			KDT = KDTree(scaled_observed_cmd)
-			dd, ind = KDT.query(scaled_observed_cmd, k=2)
-			avmindist = np.mean(dd[:,1])
-			sigma = sigmacorr*avmindist
-			gamma = 0.5/(sigma**2)
-			print('setting kernel gamma = %.1f'%gamma)
+		# if not isinstance(gamma, str):
+		# 	gamma = gamma
+		# elif gamma == 'heuristic':
+		# 	# KDT = KDTree(scaled_observed_cmd)
+		# 	# dd, ind = KDT.query(scaled_observed_cmd, k=2)
+		# 	# avmindist = np.mean(dd[:,1])
+		# 	# sigma = sigmacorr*avmindist
+		# 	# gamma = 0.5/(sigma**2)
+		# 	# print('setting kernel gamma = %.1f'%gamma)
+		# 	gamma = 0.5
+		# sigmacorr = 3
 
 		# plt.scatter(observed_cmd[:, 0], observed_cmd[:,1])
 
@@ -160,7 +171,7 @@ class FitCMD:
 			prior = prior_ln
 
 		abc = pyabc.ABCSMC(simulator, prior,\
-						   distance, sampler = pyabc.sampler.SingleCoreSampler(),\
+						   distance, sampler = pyabc_sampler,\
 						   population_size = pop_size, \
 						   eps = pyabc.epsilon.QuantileEpsilon(alpha = 0.5))
 

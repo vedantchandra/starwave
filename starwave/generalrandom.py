@@ -55,6 +55,9 @@ class GeneralRandom:
 
     return y.T
 
+  def sample(self, N = 1):
+    return self.random(N)[:,0]
+
   #@jit
   def getpdf(self, x):
     """Get pdf at position x"""
