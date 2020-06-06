@@ -34,10 +34,14 @@ class FitCMD:
 		self.simdf = simdf
 		self.base_weights = 1 / self.simdf['MassProb'] / self.simdf['BinProb']
 
-	def init_scaler(self, observed_cmd):
+	def init_scaler(self, observed_cmd, gamma = 0.5):
 		self.cmd_scaler = MinMaxScaler()
 		self.cmd_scaler.fit(observed_cmd);
 		scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
+		Phi_approx = Nystroem(kernel = 'rbf', n_components=50, gamma = gamma) 
+		Phi_approx.fit(scaled_observed_cmd)
+		self.mapping = Phi_approx.transform
+		print('scaler initialized and mapping defined!')
 		return scaled_observed_cmd
 
 	def get_cmd(self, nstars, gr_dict, simdf):
@@ -88,9 +92,13 @@ class FitCMD:
 			return np.zeros((1000,2))
 		return self.cmd_scaler.transform(cmd)
 
-	def approx_kernel_distance(self, P, Q, mapping):
+	def kernel_representation(self, P, mapping):
 		Phi_P = mapping(P).sum(axis=0)
-		Phi_Q = mapping(Q).sum(axis=0)
+		return Phi_P
+
+	def approx_kernel_distance(self, P, Q, mapping):
+		Phi_P = self.kernel_representation(P, mapping)
+		Phi_Q = self.kernel_representation(Q, mapping)
 		return np.sqrt(np.sum((Phi_P - Phi_Q)**2))
 
 	def exact_kernel_distance(self, P, Q, gamma):
@@ -103,34 +111,39 @@ class FitCMD:
 
 	def cmd_sim_spl(self, params):
 		simulated_cmd = self.sample_norm_cmd(params, model = 'spl')
-		return {'data': simulated_cmd}
+		return {'summary': self.kernel_representation(simulated_cmd, self.mapping)}
 
 	def cmd_sim_bpl(self, params):
 		# if params['ahigh'] > params['alow']:
 		# 	return {'data': dummy_cmd}
 		simulated_cmd = self.sample_norm_cmd(params, model = 'bpl')
-		return {'data': simulated_cmd}
+		return {'summary': self.kernel_representation(simulated_cmd, self.mapping)}
 
 	def cmd_sim_ln(self, params):
 		# if params['transition'] < params['mean']:
 		# 	return {'data':  dummy_cmd}
 		simulated_cmd = self.sample_norm_cmd(params, model = 'ln')
-		return {'data': simulated_cmd}
+		return {'summary': self.kernel_representation(simulated_cmd, self.mapping)}
 
 	def fit_cmd(self, observed_cmd, imf_type, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001, gamma = 0.5, 
-					cores = 1):
+					cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant'):
 
-		
+
 		if cores == 1:
 			pyabc_sampler = pyabc.sampler.SingleCoreSampler()
 		elif cores > 1:
-			pyabc_sampler = pyabc.sampler.MulticoreParticleParallelSampler(n_procs = cores)
+			pyabc_sampler = pyabc.sampler.MulticoreEvalParallelSampler(n_procs = cores)
 		else:
 			print('invalid number of cores. defaulting to 1 core.')
 			pyabc_sampler = pyabc.sampler.SingleCoreSampler()
 
+		if population_strategy == 'constant':
+			population_strategy = pyabc.populationstrategy.ConstantPopulationSize(pop_size)
+		elif population_strategy == 'adapt':
+			population_strategy = pyabc.populationstrategy.AdaptivePopulationSize(pop_size)
 
-		scaled_observed_cmd = self.init_scaler(observed_cmd)
+
+		scaled_observed_cmd = self.init_scaler(observed_cmd, gamma = gamma)
 
 		# if not isinstance(gamma, str):
 		# 	gamma = gamma
@@ -146,42 +159,57 @@ class FitCMD:
 
 		# plt.scatter(observed_cmd[:, 0], observed_cmd[:,1])
 
-		obs = dict(data = scaled_observed_cmd)
+		# R = np.random.uniform(0, 1, (len(observed_cmd),2))
+
+		obs = dict(summary = self.kernel_representation(scaled_observed_cmd, self.mapping))
 
 		dummy_cmd = np.zeros(observed_cmd.shape)
-
-		R = np.random.uniform(0, 1, (len(observed_cmd),2))
-		Phi_approx = Nystroem(kernel = 'rbf', n_components=50, gamma = gamma) 
-		Phi_approx.fit(R)
-
-		def distance(cmd1, cmd2):
-			if cmd2 is np.nan or cmd1 is np.nan:
-				print('nan!')
-			else:
-				return self.approx_kernel_distance(cmd1['data'], cmd2['data'], Phi_approx.transform)
 
 		if imf_type == 'spl':
 			simulator = self.cmd_sim_spl
 			prior = prior_spl
+			base_params = dict(slope = -2.3, binfrac = 0.2, log_intensity = np.log10(len(observed_cmd)))
 		elif imf_type == 'bpl':
 			simulator = self.cmd_sim_bpl
 			prior = prior_bpl
+			base_params = dict(ahigh = -2.3, binfrac = 0.2, log_intensity = np.log10(len(observed_cmd)), alow = -1.3, split = 0.5)
 		elif imf_type == 'ln':
 			simulator = self.cmd_sim_ln
 			prior = prior_ln
+			base_params = dict(mean = 0.25, width = 0.6, transition = 1, slope = -2.3, binfrac = 0.2, log_intensity = np.log10(len(observed_cmd)))
 
-		abc = pyabc.ABCSMC(simulator, prior,\
-						   distance, sampler = pyabc_sampler,\
-						   population_size = pop_size, \
-						   eps = pyabc.epsilon.QuantileEpsilon(alpha = 0.5))
+
+		if accept == 'uniform':
+			acceptor = pyabc.acceptor.UniformAcceptor()
+			eps = pyabc.epsilon.QuantileEpsilon(alpha = alpha)
+			def distance(cmd1, cmd2):
+				return np.sqrt(np.sum((cmd1['summary'] - cmd2['summary'])**2))
+
+		elif accept == 'stochastic':
+			acceptor = pyabc.StochasticAcceptor()
+			eps = pyabc.Temperature()
+
+			sim_rep = np.asarray([simulator(base_params)['summary'] for ii in range(25)])
+
+			var = np.var(sim_rep, 0)
+
+			distance = pyabc.IndependentNormalKernel(var = var)
+
+		abc = pyabc.ABCSMC(simulator, 
+							prior,
+							distance, 
+							sampler = pyabc_sampler,
+							population_size = pop_size, 
+							eps = eps,
+							acceptor = acceptor)
 
 		db_path = ("sqlite:///" + savename + ".db")
 
-		abc.new(db_path, {'data': obs['data']});
+		abc.new(db_path, obs);
 
-		history = abc.run(min_acceptance_rate = min_acceptance_rate, max_nr_populations = max_n_pop)
+		self.history = abc.run(min_acceptance_rate = min_acceptance_rate, max_nr_populations = max_n_pop)
 
-		return history
+		return self.history
 
 	def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
 
