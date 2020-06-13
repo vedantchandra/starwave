@@ -30,11 +30,11 @@ class SWParameter(UserDict):
         self.dist_kwargs = dist_kwargs
         self.fixed = fixed
         
-        param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
+        self.param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
                           distribution = self.distribution, dist_kwargs = self.dist_kwargs,
                           fixed = self.fixed)
         
-        super().__init__(param_dict)
+        super().__init__(self.param_dict)
         
     def set(self, value = None, bounds = None, distribution = None, dist_kwargs = None, fixed = None):
         
@@ -48,6 +48,12 @@ class SWParameter(UserDict):
             self.dist_kwargs = dist_kwargs
         if fixed is not None:
             self.fixed = fixed
+            
+        self.param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
+                          distribution = self.distribution, dist_kwargs = self.dist_kwargs,
+                          fixed = self.fixed)
+        
+        super().__init__(self.param_dict)
         
 def make_params(imf_type):
     
@@ -84,6 +90,7 @@ def make_prior(parameters):
         
         if param.fixed:
             priors[name] = pyabc.RV(param.distribution, param.value, 0)
+            continue
         
         
         lower = param.bounds[0]
