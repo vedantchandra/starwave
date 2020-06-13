@@ -125,19 +125,6 @@ def print_prior_summary(parameters):
         print('dist_kwargs: ', end =" ")
         print(param.dist_kwargs)
 
-# prior_spl = pyabc.Distribution(slope = pyabc.RV("uniform", -4, 4),
-# 						binfrac = pyabc.RV("uniform", 0, 1),
-# 						  log_intensity = pyabc.RV("uniform", 2, 3))
-
-# prior_bpl = pyabc.Distribution(alow = pyabc.RV("uniform", -2, 2), ahigh = pyabc.RV("uniform", -3, 2),
-# 						split = pyabc.RV("uniform", 0.2, 0.8), binfrac = pyabc.RV("uniform", 0, 1),
-# 						  log_intensity = pyabc.RV("uniform", 2, 3))
-
-# prior_ln = pyabc.Distribution(mean = pyabc.RV("uniform", 0.1, 0.7,), \
-# 		width = pyabc.RV("uniform", 0, 1),  slope = pyabc.RV("uniform", -3, 2),
-# 				transition = pyabc.RV("uniform", 0.8, 0.4), binfrac = pyabc.RV("uniform", 0, 1),
-# 				log_intensity = pyabc.RV("uniform", 2, 3))
-
 if __name__ == '__main__':
     p = make_params('bpl')
     print(make_prior(p))

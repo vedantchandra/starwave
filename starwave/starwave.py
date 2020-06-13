@@ -64,17 +64,17 @@ class StarWave:
     def sample_cmd(self, params, model = 'spl'):
             
         if model == 'spl':
-            gr_dict = {'logM':set_GR_spl(params['slope']), 'BinQ': set_GR_unif(params['binfrac'])}
+            gr_dict = {'logM':set_GR_spl(params['slope']), 'BinQ': set_GR_unif(params['bf'])}
         elif model == 'bpl':
-            gr_dict = {'logM':set_GR_bpl(params['alow'], params['ahigh'], params['split']),\
-                       'BinQ': set_GR_unif(params['binfrac'])}
+            gr_dict = {'logM':set_GR_bpl(params['alow'], params['ahigh'], params['bm']),\
+                       'BinQ': set_GR_unif(params['bf'])}
         elif model == 'ln':
-            gr_dict = {'logM':set_GR_ln10full(params['mean'], params['width'], params['transition'], \
-                    params['slope']), 'BinQ': set_GR_unif(params['binfrac'])}
+            gr_dict = {'logM':set_GR_ln10full(params['mean'], params['sigma'], params['bm'], \
+                    params['slope']), 'BinQ': set_GR_unif(params['bf'])}
         else:
             print('Unrecognized model!')
         
-        intensity = 10**params['log_intensity']
+        intensity = 10**params['log_int']
         nstars = int(stats.poisson.rvs(intensity))
         
         j = self.get_cmd(nstars, gr_dict, self.simdf)
