@@ -1,5 +1,13 @@
 import numpy as np
-from .generalrandom import GeneralRandom
+import sys
+import os 
+
+path = os.path.abspath(__file__)
+dir_path = os.path.dirname(path)
+sys.path.append(dir_path)
+
+from generalrandom import GeneralRandom
+
 l_logm = np.log(0.1)
 u_logm = np.log(8)
 
