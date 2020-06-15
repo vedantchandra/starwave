@@ -17,6 +17,11 @@ from plot import *
 from parameters import *
 
 class StarWave:
+    """
+    StarWave: fitting the stellar birth function of resolved stellar populations 
+    with approximate Bayesian computation. 
+    
+    """
 
     def __init__(self, simdf = None, imf_type = 'spl'):
         
@@ -103,8 +108,8 @@ class StarWave:
         PQ = np.exp(- gamma*np.sum((P[:, None, :] - Q[None, :, :])**2, axis=-1)).sum()
         return np.sqrt(PP + QQ - 2 * PQ)
 
-    def cmd_sim(self, imf_type = 'spl'):
-        simulated_cmd = self.sample_norm_cmd(params, model = imf_type)
+    def cmd_sim(self, params):
+        simulated_cmd = self.sample_norm_cmd(params, model = self.imf_type)
         return {'summary': self.kernel_representation(simulated_cmd, self.mapping)}
     
     def fit_cmd(self, observed_cmd, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001, gamma = 0.5, 
@@ -147,9 +152,9 @@ class StarWave:
 
         dummy_cmd = np.zeros(observed_cmd.shape)
 
-        simulator = self.cmd_sim(self.imf_type)
+        simulator = self.cmd_sim
         
-        prior = make_priors(self.params)
+        prior = self.params.to_pyabc()
         
 
 

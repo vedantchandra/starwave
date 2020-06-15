@@ -2,6 +2,24 @@ import pyabc
 from collections import UserDict
 
 class SWParameters(UserDict):
+    """
+    dict-like class that contains SWParameter objects
+    
+    Attributes
+    ----------
+    dict : dict
+        dictionary of SWParameter objects
+    
+    Methods
+    -------
+    get_dict():
+        Returns the base dictionary of SWParameter objects
+    summary():
+        Prints a summary of all contained parameters and their priors
+    to_pyabc():
+        Converts parameters into pyABC prior distributions
+    
+    """
     
     def __init__(self, params_dict):
         
@@ -21,6 +39,32 @@ class SWParameters(UserDict):
         return make_prior(self)
 
 class SWParameter(UserDict):
+    """
+    dict-like class for each parameter's prior
+    
+    Attributes
+    ----------
+    name : dict
+        parameter name
+    value : float
+        initial parameter value
+    bounds : array-like
+        lower and upper bounds on the parameter. ignored if distribution != 'uniform'
+    distribution : str
+        prior distribution name in scipy.stats naming convention
+    dist_kwargs : dict
+        arguments to specify non-uniform priors, for example 'mean' and 'sigma' if 
+        distribution is 'norm'
+    fixed : bool
+        whether to fix or vary parameter during sampling
+    
+    Methods
+    -------
+    set(**attributes):
+        Set any of the parameter's attributes. Any attribute not explicitly 
+        set is left at the default. 
+    
+    """
     
     def __init__(self, name, value, bounds, distribution = 'uniform', dist_kwargs = None, fixed = False):
         self.name = name
