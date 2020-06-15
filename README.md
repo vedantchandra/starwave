@@ -1,5 +1,5 @@
 # starwave
 
-modeling resolved stellar populations with bayesian inference
+fitting the stellar birth function of resolved stellar populations with bayesian inference
 
-work in progress. kindly contact the authors to ascertain the current stage of development. 
+currently version 0.0, so we don't recommend using this yet!
