@@ -6,6 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 from scipy import stats
 import os
 import sys
+import functools
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -28,8 +29,13 @@ class StarWave:
         if simdf is not None:
             self.simdf = simdf
             self.base_weights = 1 / self.simdf['MassProb'] / self.simdf['BinProb']
+            
+        if isinstance(imf_type, (list, np.ndarray, tuple)):
+            pass
+        else:
+            imf_type = [imf_type]
         self.imf_type = imf_type
-        self.params = make_params(imf_type)
+        self.params = [make_params(imf) for imf in imf_type]
         
         print('initalized starwave with %s IMF and default priors' % imf_type)
 
@@ -111,12 +117,12 @@ class StarWave:
         PQ = np.exp(- gamma*np.sum((P[:, None, :] - Q[None, :, :])**2, axis=-1)).sum()
         return np.sqrt(PP + QQ - 2 * PQ)
 
-    def cmd_sim(self, params):
-        in_cmd, out_cmd = self.sample_norm_cmd(params, model = self.imf_type)
+    def cmd_sim(self, params, imf_type):
+        in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
         return {'input': self.kernel_representation(in_cmd, self.mapping),
                 'output': self.kernel_representation(out_cmd, self.mapping)}
     
-    def fit_cmd(self, observed_cmd, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001, gamma = 0.5, 
+    def fit_cmd(self, observed_cmd, pop_size = 1000, max_n_pop = np.Inf, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = 0.5, 
                     cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant'):
 
 
@@ -156,10 +162,24 @@ class StarWave:
                    output = self.kernel_representation(scaled_observed_cmd, self.mapping))
 
         dummy_cmd = np.zeros(observed_cmd.shape)
-
-        simulator = self.cmd_sim
         
-        prior = self.params.to_pyabc()
+        def simcmd(imf_type):
+            return lambda params: self.cmd_sim(params, imf_type = imf_type)
+        
+        simulator = [];
+        prior = [];
+        transitions = [];
+        for idx,imf in enumerate(self.imf_type):
+            simulator.append(simcmd(imf))
+            prior.append(self.params[idx].to_pyabc())
+            transitions.append(pyabc.transition.LocalTransition(k_fraction=0.3))
+        
+        
+        
+        print(simulator)
+        print(prior)
+        
+        print(simulator[0](dict(slope = -2.3, bf = 0.2, log_int = 4)))
         
 
 
@@ -173,9 +193,9 @@ class StarWave:
             acceptor = pyabc.StochasticAcceptor()
             eps = pyabc.Temperature()
             
-            base_params = make_params(self.imf_type).get_values()
+            base_params = make_params(self.imf_type[0]).get_values()
 
-            sim_rep = np.asarray([simulator(base_params)['output'] for ii in range(25)])
+            sim_rep = np.asarray([self.cmd_sim(base_params, imf_type = self.imf_type[0])['output'] for ii in range(25)])
 
             var = np.var(sim_rep, 0)
 
@@ -187,7 +207,7 @@ class StarWave:
                             sampler = pyabc_sampler,
                             population_size = pop_size, 
                             eps = eps,
-                            acceptor = acceptor)
+                            acceptor = acceptor, transitions = transitions)
 
         db_path = ("sqlite:///" + savename + ".db")
 
