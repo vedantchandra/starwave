@@ -29,8 +29,12 @@ class SWParameters(UserDict):
     def __getitem__(self, param):
          return self.dict[param]
         
-    def get_dict(self):
-        return self.dict
+    def get_values(self):
+        values_dict = {};
+        for name, param in self.dict.items():
+            values_dict[name] = param.value
+            
+        return values_dict
     
     def summary(self):
         print_prior_summary(self.dict)

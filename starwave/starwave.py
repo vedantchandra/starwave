@@ -59,9 +59,10 @@ class StarWave:
         
         sel_df = self.simdf.iloc[idx]
         
+        in_mags = sel_df[['input_mag1', 'input_mag2']].dropna().to_numpy()
         out_mags = sel_df[['output_mag1', 'output_mag2']].dropna().to_numpy()
 
-        return out_mags
+        return in_mags, out_mags
     
     def make_cmd(self, mags):
         return np.asarray( [mags[:,0] - mags[:,1], mags[:,0]] ).T
@@ -82,14 +83,16 @@ class StarWave:
         intensity = 10**params['log_int']
         nstars = int(stats.poisson.rvs(intensity))
         
-        j = self.get_cmd(nstars, gr_dict, self.simdf)
-        return np.asarray([j[:,0] - j[:,1], j[:,0]]).T
+        j_in, j_out = self.get_cmd(nstars, gr_dict, self.simdf)
+        cmd_in = np.asarray([j_in[:,0] - j_in[:,1], j_in[:,0]]).T
+        cmd_out = np.asarray([j_out[:,0] - j_out[:,1], j_out[:,0]]).T
+        return cmd_in, cmd_out
 
     def sample_norm_cmd(self, params, model = 'spl'):
-        cmd = self.sample_cmd(params, model)
-        if len(cmd) == 0:
+        in_cmd, out_cmd = self.sample_cmd(params, model)
+        if len(in_cmd) == 0:
             return np.zeros((1000,2))
-        return self.cmd_scaler.transform(cmd)
+        return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
 
     def kernel_representation(self, P, mapping):
         Phi_P = mapping(P).sum(axis=0)
@@ -109,8 +112,9 @@ class StarWave:
         return np.sqrt(PP + QQ - 2 * PQ)
 
     def cmd_sim(self, params):
-        simulated_cmd = self.sample_norm_cmd(params, model = self.imf_type)
-        return {'summary': self.kernel_representation(simulated_cmd, self.mapping)}
+        in_cmd, out_cmd = self.sample_norm_cmd(params, model = self.imf_type)
+        return {'input': self.kernel_representation(in_cmd, self.mapping),
+                'output': self.kernel_representation(out_cmd, self.mapping)}
     
     def fit_cmd(self, observed_cmd, pop_size, max_n_pop, savename, min_acceptance_rate = 0.0001, gamma = 0.5, 
                     cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant'):
@@ -148,7 +152,8 @@ class StarWave:
 
         # R = np.random.uniform(0, 1, (len(observed_cmd),2))
 
-        obs = dict(summary = self.kernel_representation(scaled_observed_cmd, self.mapping))
+        obs = dict(input = self.kernel_representation(scaled_observed_cmd, self.mapping),
+                   output = self.kernel_representation(scaled_observed_cmd, self.mapping))
 
         dummy_cmd = np.zeros(observed_cmd.shape)
 
@@ -162,17 +167,19 @@ class StarWave:
             acceptor = pyabc.acceptor.UniformAcceptor()
             eps = pyabc.epsilon.QuantileEpsilon(alpha = alpha)
             def distance(cmd1, cmd2):
-                return np.sqrt(np.sum((cmd1['summary'] - cmd2['summary'])**2))
+                return np.sqrt(np.sum((cmd1['output'] - cmd2['output'])**2))
 
         elif accept == 'stochastic':
             acceptor = pyabc.StochasticAcceptor()
             eps = pyabc.Temperature()
+            
+            base_params = make_params(self.imf_type).get_values()
 
-            sim_rep = np.asarray([simulator(base_params)['summary'] for ii in range(25)])
+            sim_rep = np.asarray([simulator(base_params)['output'] for ii in range(25)])
 
             var = np.var(sim_rep, 0)
 
-            distance = pyabc.IndependentNormalKernel(var = var)
+            distance = pyabc.IndependentNormalKernel(var = var, keys = ['input'])
 
         abc = pyabc.ABCSMC(simulator, 
                             prior,
