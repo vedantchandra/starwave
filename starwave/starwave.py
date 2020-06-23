@@ -174,13 +174,6 @@ class StarWave:
             prior.append(self.params[idx].to_pyabc())
             transitions.append(pyabc.transition.LocalTransition(k_fraction=0.3))
         
-        
-        
-        print(simulator)
-        print(prior)
-        
-        print(simulator[0](dict(slope = -2.3, bf = 0.2, log_int = 4)))
-        
 
 
         if accept == 'uniform':
