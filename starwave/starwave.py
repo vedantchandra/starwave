@@ -96,7 +96,7 @@ class StarWave:
 
     def sample_norm_cmd(self, params, model = 'spl'):
         in_cmd, out_cmd = self.sample_cmd(params, model)
-        if len(in_cmd) == 0:
+        if len(in_cmd) == 0 or len(out_cmd) == 0:
             return np.zeros((1000,2))
         return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
 
