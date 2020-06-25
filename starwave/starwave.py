@@ -168,12 +168,9 @@ class StarWave:
         
         simulator = [];
         prior = [];
-        transitions = [];
         for idx,imf in enumerate(self.imf_type):
             simulator.append(simcmd(imf))
-            prior.append(self.params[idx].to_pyabc())
-            transitions.append(pyabc.transition.LocalTransition(k_fraction=0.3))
-        
+            prior.append(self.params[idx].to_pyabc())        
 
 
         if accept == 'uniform':
@@ -200,7 +197,7 @@ class StarWave:
                             sampler = pyabc_sampler,
                             population_size = pop_size, 
                             eps = eps,
-                            acceptor = acceptor, transitions = transitions)
+                            acceptor = acceptor)
 
         db_path = ("sqlite:///" + savename + ".db")
 
