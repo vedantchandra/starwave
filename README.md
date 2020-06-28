@@ -1,4 +1,4 @@
-# starwave
+# ~ starwave ~
 
 ![GitHub](https://img.shields.io/github/license/vedantchandra/starwave)
 
