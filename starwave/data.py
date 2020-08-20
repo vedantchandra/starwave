@@ -14,7 +14,7 @@ class MagData:
             self.data = pandas.DataFrame(self.mags, columns = self.names);
 
     def to_cmd(self, band1, band2):
-        mag = self.data[band1]
+        mag = self.data[band2]
         color = self.data[band1] - self.data[band2]
         return np.asarray([color,mag]).T
 
@@ -25,8 +25,8 @@ class MagData:
         if band2 is None:
             band2 = self.names[1]
         
-        mag = self.data[band1]
-        color = self.data[band2] - self.data[band1]
+        mag = self.data[band2]
+        color = self.data[band1] - self.data[band2]
 
         f = plt.figure(figsize = (8,5))
         plt.scatter(color, mag, s = 10, alpha = 0.75, color = 'k')

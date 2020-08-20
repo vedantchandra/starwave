@@ -90,8 +90,8 @@ class StarWave:
         nstars = int(stats.poisson.rvs(intensity))
         
         j_in, j_out = self.get_cmd(nstars, gr_dict, self.simdf)
-        cmd_in = np.asarray([j_in[:,0] - j_in[:,1], j_in[:,0]]).T
-        cmd_out = np.asarray([j_out[:,0] - j_out[:,1], j_out[:,0]]).T
+        cmd_in = np.asarray([j_in[:,0] - j_in[:,1], j_in[:,1]]).T
+        cmd_out = np.asarray([j_out[:,0] - j_out[:,1], j_out[:,1]]).T
         return cmd_in, cmd_out
 
     def sample_norm_cmd(self, params, model = 'spl'):
@@ -123,7 +123,8 @@ class StarWave:
                 'output': self.kernel_representation(out_cmd, self.mapping)}
     
     def fit_cmd(self, observed_cmd, pop_size = 1000, max_n_pop = np.Inf, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = 0.5, 
-                    cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant'):
+                    cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant',
+                    statistic = 'output'):
 
 
         if cores == 1:
@@ -177,7 +178,7 @@ class StarWave:
             acceptor = pyabc.acceptor.UniformAcceptor()
             eps = pyabc.epsilon.QuantileEpsilon(alpha = alpha)
             def distance(cmd1, cmd2):
-                return np.sqrt(np.sum((cmd1['output'] - cmd2['output'])**2))
+                return np.sqrt(np.sum((cmd1[statistic] - cmd2[statistic])**2))
 
         elif accept == 'stochastic':
             acceptor = pyabc.StochasticAcceptor()
