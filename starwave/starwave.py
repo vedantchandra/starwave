@@ -71,7 +71,7 @@ class StarWave:
         return in_mags, out_mags
     
     def make_cmd(self, mags):
-        return np.asarray( [mags[:,0] - mags[:,1], mags[:,0]] ).T
+        return np.asarray( [mags[:,0] - mags[:,1], mags[:,1]] ).T
 
     def sample_cmd(self, params, model = 'spl'):
             
@@ -119,8 +119,8 @@ class StarWave:
 
     def cmd_sim(self, params, imf_type):
         in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
-        return {'input': self.kernel_representation(in_cmd, self.mapping),
-                'output': self.kernel_representation(out_cmd, self.mapping)}
+        return {'output': self.kernel_representation(out_cmd, self.mapping)#'input': self.kernel_representation(in_cmd, self.mapping),
+                }
     
     def fit_cmd(self, observed_cmd, pop_size = 1000, max_n_pop = np.Inf, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = 0.5, 
                     cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant',
@@ -159,8 +159,7 @@ class StarWave:
 
         # R = np.random.uniform(0, 1, (len(observed_cmd),2))
 
-        obs = dict(input = self.kernel_representation(scaled_observed_cmd, self.mapping),
-                   output = self.kernel_representation(scaled_observed_cmd, self.mapping))
+        obs = dict(output = self.kernel_representation(scaled_observed_cmd, self.mapping))
 
         dummy_cmd = np.zeros(observed_cmd.shape)
         
@@ -183,13 +182,9 @@ class StarWave:
         elif accept == 'stochastic':
             acceptor = pyabc.StochasticAcceptor()
             eps = pyabc.Temperature()
-            
             base_params = make_params(self.imf_type[0]).get_values()
-
             sim_rep = np.asarray([self.cmd_sim(base_params, imf_type = self.imf_type[0])['output'] for ii in range(25)])
-
             var = np.var(sim_rep, 0)
-
             distance = pyabc.IndependentNormalKernel(var = var, keys = ['input'])
 
         abc = pyabc.ABCSMC(simulator, 

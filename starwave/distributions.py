@@ -8,7 +8,7 @@ sys.path.append(dir_path)
 
 from generalrandom import GeneralRandom
 
-l_logm = np.log(0.1)
+l_logm = np.log(0.05)
 u_logm = np.log(8)
 
 def set_GR_spl(slope):
