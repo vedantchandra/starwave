@@ -97,7 +97,7 @@ class StarWave:
     def sample_norm_cmd(self, params, model = 'spl'):
         in_cmd, out_cmd = self.sample_cmd(params, model)
         if len(in_cmd) == 0 or len(out_cmd) == 0:
-            return np.zeros((1000,2))
+            return np.zeros((1000,2)), np.zeros((1000, 2))
         return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
 
     def kernel_representation(self, P, mapping):
@@ -119,9 +119,8 @@ class StarWave:
 
     def cmd_sim(self, params, imf_type):
         in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
-        return {'output': self.kernel_representation(out_cmd, self.mapping)#'input': self.kernel_representation(in_cmd, self.mapping),
-                }
-    
+        return {'output': self.kernel_representation(out_cmd, self.mapping)}
+        #'input': self.kernel_representation(in_cmd, self.mapping),
     def fit_cmd(self, observed_cmd, pop_size = 1000, max_n_pop = np.Inf, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = 0.5, 
                     cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant',
                     statistic = 'output'):
@@ -142,22 +141,6 @@ class StarWave:
 
 
         scaled_observed_cmd = self.init_scaler(observed_cmd, gamma = gamma)
-
-        # if not isinstance(gamma, str):
-        #     gamma = gamma
-        # elif gamma == 'heuristic':
-        #     # KDT = KDTree(scaled_observed_cmd)
-        #     # dd, ind = KDT.query(scaled_observed_cmd, k=2)
-        #     # avmindist = np.mean(dd[:,1])
-        #     # sigma = sigmacorr*avmindist
-        #     # gamma = 0.5/(sigma**2)
-        #     # print('setting kernel gamma = %.1f'%gamma)
-        #     gamma = 0.5
-        # sigmacorr = 3
-
-        # plt.scatter(observed_cmd[:, 0], observed_cmd[:,1])
-
-        # R = np.random.uniform(0, 1, (len(observed_cmd),2))
 
         obs = dict(output = self.kernel_representation(scaled_observed_cmd, self.mapping))
 
