@@ -6,20 +6,21 @@ def get_absolute_mags(logsysmass,age,met,binq,iso_int,bands):
     # intrinsic magnitudes of the current model
 
     sysmass = np.exp(logsysmass)
+    nb = len(bands)
 
     if (binq >= 0):
         # If the system is binary get the mass ratio, obtain interpolated
         # magnitudes for each component and sum them
         mass_2  = sysmass/(1.+binq)*np.array([1.,binq],dtype=float)
-        sysmags = np.nan*np.ones([2,2])
+        sysmags = np.nan*np.ones([2,nb])
         for j,mcomp in enumerate(mass_2):
             row = iso_int(mcomp,age,met)
-            for i in range(len(bands)):
+            for i in range(nb):
                 sysmags[j,i] = float(row[bands[i]])
 
         sysmags = 10**(-0.4*sysmags)
-        absmags = np.nan*np.ones(2)
-        for j in range(2):
+        absmags = np.nan*np.ones(nb)
+        for j in range(nb):
             oneband = sysmags[:,j]
             msk = ~np.isnan(oneband)
             if (~np.any(msk)):
@@ -27,9 +28,9 @@ def get_absolute_mags(logsysmass,age,met,binq,iso_int,bands):
             else:
                 absmags[j] = -2.5* np.log10(np.sum(oneband[msk]))
     else:
-        absmags = np.empty(2)
+        absmags = np.empty(nb)
         row = iso_int(sysmass,age,met)
-        for i in range(len(bands)):
+        for i in range(nb):
             absmags[i] = float(row[bands[i]])
 
     return absmags

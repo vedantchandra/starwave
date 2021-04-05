@@ -3,6 +3,16 @@ from scipy import stats
 import matplotlib.pyplot as plt
 import numpy as np
 
+def plot_cmd(cmd, bands):
+	nb = cmd.shape[1]
+	for ii in range(nb - 1):
+		plt.scatter(cmd[:, ii + 1], cmd[:, 0], s = 1, label = bands[ii + 1] + r'$-$' + bands[0])
+
+	plt.legend(markerscale = 10)
+	plt.xlabel('Color')
+	plt.ylabel(bands[0] + ' Magnitude')
+	plt.gca().invert_yaxis()
+
 def cornerplot(sampledf, weights = None, labels = None, markers = None, ranges = None):
 	names = sampledf.columns
 	samples = MCSamples(samples = sampledf.to_numpy(), names = names, weights = weights, labels = labels, ranges = ranges)

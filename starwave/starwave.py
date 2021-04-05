@@ -7,7 +7,7 @@ import os
 import sys
 import functools
 import minimint
-from sklearn.neighbors import KDTree
+from sklearn.neighbors import KDTree,NearestNeighbors
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -34,7 +34,7 @@ class StarWave:
     
     """
 
-    def __init__(self, isodf, asdf, bands = ['ACS_HRC_F606W', 'ACS_HRC_F814W'], imf_type = 'spl', sfh_type = 'gaussian'):
+    def __init__(self, isodf, asdf, bands, imf_type, sfh_type = 'gaussian'):
 
         self.imf_type = imf_type
         self.sfh_type = sfh_type
@@ -110,10 +110,26 @@ class StarWave:
         output_mags = output_mags[~nans]
 
 
-        return input_mags, output_mags # make input and output. ADD ASTCAT HERE
+        return input_mags, output_mags 
     
     def make_cmd(self, mags):
-        return np.asarray( [mags[:,0] - mags[:,1], mags[:,1]] ).T # GENERALIZE TO ND
+        cmd = mags
+        for ii in range(mags.shape[1] - 1):
+            cmd[:, ii + 1] -= cmd[:, 0]
+
+        return cmd
+
+    def best_gamma(self, cmd, q = 0.68, fac = 1, NN = 5): # pass a scaled CMD
+        nbr = NearestNeighbors(n_neighbors = 2, algorithm = 'kd_tree', metric = 'minkowski', p = 2)
+        nbr.fit(cmd)
+        dst, idx = nbr.kneighbors(cmd, return_distance = True)
+        dst = dst[:, -1] # pick NNth distance
+
+        best_dist = np.quantile(dst, q)
+        gamma = 1 / (2 * (fac * best_dist)**2)
+
+        return gamma
+
 
     def set_sfh_dist(self, pdict, sfh_type):
 
@@ -221,7 +237,7 @@ class StarWave:
         in_cmd, out_cmd = self.sample_cmd(params, model)
         if len(in_cmd) == 0 or len(out_cmd) == 0:
             print('empty cmd!')
-            return np.zeros((1000,2)), np.zeros((1000, 2))
+            return self.dummy_cmd, self.dummy_cmd
         return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
 
     def kernel_representation(self, P, mapping):
@@ -235,9 +251,10 @@ class StarWave:
         else:
             return self.kernel_representation(out_cmd, self.mapping)
 
-    def fit_cmd(self, observed_cmd, n_rounds = 5, n_sims = 100, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = 0.5, 
+    def fit_cmd(self, observed_cmd, n_rounds = 5, n_sims = 100, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = None, 
                     cores = 1, alpha = 0.5,
-                    statistic = 'output'):
+                    statistic = 'output',
+                    gamma_kw = {}):
 
 
         if cores == 1:
@@ -247,7 +264,12 @@ class StarWave:
         obs = torch.tensor(self.kernel_representation(scaled_observed_cmd, self.mapping))
         self.obs = obs
 
-        dummy_cmd = np.zeros(observed_cmd.shape)
+        if gamma is None:
+            print('finding optimal kernel width...')
+            gamma = self.best_gamma(scaled_observed_cmd, **gamma_kw)
+            print('setting gamma = %i' % gamma)
+
+        self.dummy_cmd = np.zeros(observed_cmd.shape)
         
         def simcmd(imf_type):
             return lambda params: self.cmd_sim(params, imf_type = imf_type)
