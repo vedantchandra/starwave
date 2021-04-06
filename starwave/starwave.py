@@ -26,6 +26,8 @@ from sbi import user_input
 from sbi.inference import SNPE, prepare_for_sbi, simulate_for_sbi
 from sbi.utils.get_nn_models import posterior_nn
 
+from joblib import wrap_non_picklable_objects
+
 class StarWave:
     """
     StarWave: fitting the stellar birth function of resolved stellar populations 
@@ -289,6 +291,8 @@ class StarWave:
         self.posteriors = [];
         proposal = prior
 
+
+        simulator = wrap_non_picklable_objects(simulator)
 
         for _ in range(n_rounds):
             print('Starting round %i of neural inference...' % (_+1))
