@@ -119,7 +119,7 @@ class StarWave:
         return cmd
 
     def best_gamma(self, cmd, q = 0.68, fac = 1, NN = 5): # pass a scaled CMD
-        nbr = NearestNeighbors(n_neighbors = 2, algorithm = 'kd_tree', metric = 'minkowski', p = 2)
+        nbr = NearestNeighbors(n_neighbors = NN, algorithm = 'kd_tree', metric = 'minkowski', p = 2)
         nbr.fit(cmd)
         dst, idx = nbr.kneighbors(cmd, return_distance = True)
         dst = dst[:, -1] # pick NNth distance
@@ -279,7 +279,7 @@ class StarWave:
 
         print_prior_summary(self.params)
         
-        prior = MultipleIndependent(self.make_prior(self.params))
+        prior = user_input.user_input_checks.MultipleIndependent(self.make_prior(self.params))
         simulator = simcmd(self.imf_type)
 
         simulator,prior = prepare_for_sbi(simulator,prior)
