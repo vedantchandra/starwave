@@ -279,7 +279,7 @@ class StarWave:
 
         print_prior_summary(self.params)
         
-        prior = user_input.user_input_checks.MultipleIndependent(self.make_prior(self.params))
+        prior = MultipleIndependent(self.make_prior(self.params))
         simulator = simcmd(self.imf_type)
 
         simulator,prior = prepare_for_sbi(simulator,prior)
