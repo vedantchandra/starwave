@@ -6,7 +6,6 @@ from scipy import stats
 import os
 import sys
 import functools
-import minimint
 from sklearn.neighbors import KDTree,NearestNeighbors
 
 path = os.path.abspath(__file__)
