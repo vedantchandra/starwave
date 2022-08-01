@@ -17,12 +17,12 @@ from distributions import *
 from plot import *
 from parameters import *
 from getmags import *
-import intNN
+import intNN 
 
 import torch
 import sbi
 from sbi import utils as utils
-from sbi import user_input
+from sbi.utils import user_input_checks
 from sbi.inference import SNPE, prepare_for_sbi, simulate_for_sbi
 from sbi.utils.get_nn_models import posterior_nn
 
@@ -147,6 +147,8 @@ class StarWave:
             means = np.array([pdict['age'], pdict['feh']])
 
             return SW_SFH(stats.multivariate_normal(mean = means, cov = covmat, allow_singular = True))
+
+        elif sfh_type == 'grid':
 
     def make_prior(self, parameters):
     
@@ -282,19 +284,19 @@ class StarWave:
 
         print_prior_summary(self.params)
         
-        prior = user_input.user_input_checks.MultipleIndependent(self.make_prior(self.params))
+        prior = user_input_checks.MultipleIndependent(self.make_prior(self.params))
         simulator = simcmd(self.imf_type)
 
-        simulator,prior = prepare_for_sbi(simulator,prior)
+        self.simulator,self.prior = prepare_for_sbi(simulator,prior)
 
-        inference = SNPE(prior = prior)
+        inference = SNPE(prior = self.prior)
 
         self.posteriors = [];
-        proposal = prior
+        proposal = self.prior
 
         for _ in range(n_rounds):
             print('Starting round %i of neural inference...' % (_+1))
-            theta, x = simulate_for_sbi(simulator, proposal, num_simulations=n_sims, num_workers = cores)
+            theta, x = simulate_for_sbi(self.simulator, proposal, num_simulations=n_sims, num_workers = cores)
             density_estimator = inference.append_simulations(theta, x, proposal=proposal).train()
             posterior = inference.build_posterior(density_estimator)
             self.posteriors.append(posterior)

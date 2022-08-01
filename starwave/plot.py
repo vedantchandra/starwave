@@ -11,6 +11,7 @@ def plot_cmd(cmd, bands):
 	plt.legend(markerscale = 10)
 	plt.xlabel('Color')
 	plt.ylabel(bands[0] + ' Magnitude')
+	
 	plt.gca().invert_yaxis()
 
 def cornerplot(sampledf, weights = None, labels = None, markers = None, ranges = None):

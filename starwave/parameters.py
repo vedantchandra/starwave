@@ -1,4 +1,3 @@
-import pyabc
 from collections import OrderedDict
 import sbi
 from torch import Tensor, float32
