@@ -36,7 +36,12 @@ class StarWave:
     
     """
 
-    def __init__(self, isodf, asdf, bands, imf_type, sfh_type = 'gaussian'):
+    def __init__(self, isodf, asdf, bands, imf_type, sfh_type = 'gaussian',
+        sfh_grid = None):
+
+        if sfh_type == 'grid' and sfh_grid is None:
+            print('please pass an sfh_grid if you want to use grid-based SFH sampling!')
+            raise
 
         self.imf_type = imf_type
         self.sfh_type = sfh_type
@@ -55,6 +60,7 @@ class StarWave:
         self.kdtree = KDTree(asdf[self.bands_in])
         self.trgb = -100
         self.lim_logmass = np.log(0.1)
+        self.sfh_grid = sfh_grid
 
         self.debug = False
         
@@ -149,6 +155,14 @@ class StarWave:
             return SW_SFH(stats.multivariate_normal(mean = means, cov = covmat, allow_singular = True))
 
         elif sfh_type == 'grid':
+
+            if self.sfh_grid is None:
+                print('must pass an sfh_grid to use grid-based sampling!')
+                raise
+
+            else:
+                return GridSFH(self.sfh_grid)
+
 
     def make_prior(self, parameters):
     

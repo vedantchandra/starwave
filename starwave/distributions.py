@@ -99,6 +99,40 @@ class SW_SFH:
 		#age = np.log10(age * 1e9) # CONVERT TO LOG AGE FOR ISOCHRONE
 		return np.vstack((age, feh)).T
 
+class GridSFH:
+    '''
+    Loads and samples a grid-based SFH
+    '''
+    
+    def __init__(self, sfh_grid):
+        '''
+        Assumde sfh_grid is a dictionary with the following keys:
+        'mets' : array of M [Fe/H] grid points 
+        'ages' : array of A age (Gyr) grid points
+        'probabilities' : M x A matrix with probability (or some weight) of each SFH bin
+        '''
+        
+        self.sfh_grid = sfh_grid
+        mets, ages, probs = sfh_grid['mets'], sfh_grid['ages'], sfh_grid['probabilities']
+        MM, AA = np.meshgrid(mets[:-1], ages[:-1])
+        
+        self.mm = MM.ravel()
+        self.aa = AA.ravel()
+        self.pp = probs.ravel() / np.sum(probs)
+        self.idxs = np.arange(len(self.pp))
+
+        self.dm = np.diff(mets)[0]
+        self.da = np.diff(ages)[0]
+        
+        self.rng = np.random.default_rng()
+    
+    def sample(self, N): 
+        sel_idx = self.rng.choice(self.idxs, p = self.pp, size = N)
+        sampled_m = self.mm[sel_idx] + self.rng.uniform(0, self.dm, size = N)
+        sampled_a = self.aa[sel_idx] + self.rng.uniform(0, self.da, size = N)
+        
+        return np.vstack((sampled_a, sampled_m)).T
+
 def set_GR_spl(slope):
 		x = np.linspace(l_logm,u_logm,1000)
 		y = np.exp(x*(slope+1))
