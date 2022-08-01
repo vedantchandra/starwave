@@ -1,3 +1,6 @@
+"""
+.. include:: documentation.md
+"""
 from .generalrandom import *
 from .data import *
 from .distributions import *

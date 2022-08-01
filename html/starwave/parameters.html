@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>starwave.parameters API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>starwave.parameters</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from collections import OrderedDict
+import sbi
+from torch import Tensor, float32
+from torch.distributions import Distribution
+from typing import Optional, Union, Sequence
+from scipy import stats
+import torch
+import copy
+
+class SWDist:
+    def __init__(self, distribution):
+        self.dist = distribution # distribution is a scipy object
+
+    def sample(self, N):
+        return self.dist.rvs(N)
+
+    def log_prob(self, x):
+        return self.dist.logpdf(x)
+
+class SWParameters(OrderedDict):
+    &#34;&#34;&#34;
+    dict-like class that contains SWParameter objects
+    
+    Attributes
+    ----------
+    dict : dict
+        dictionary of SWParameter objects
+    
+    Methods
+    -------
+    get_dict():
+        Returns the base dictionary of SWParameter objects
+    summary():
+        Prints a summary of all contained parameters and their priors
+    to_pyabc():
+        Converts parameters into pyABC prior distributions
+    
+    &#34;&#34;&#34;
+    
+    def __init__(self, params_dict):
+        
+        super().__init__(params_dict)
+        self.dict = params_dict
+        
+    def __getitem__(self, param):
+         return self.dict[param]
+        
+    def get_values(self):
+        values_dict = {};
+        for name, param in self.dict.items():
+            values_dict[name] = param.value
+            
+        return values_dict
+    
+    def summary(self):
+        print_prior_summary(self.dict)
+
+    def to_torch(self):
+        return make_prior(self)
+        
+    def to_pyabc(self):
+        return make_prior_pyabc(self)
+
+class SWParameter(OrderedDict):
+    &#34;&#34;&#34;
+    dict-like class for each parameter&#39;s prior
+    
+    Attributes
+    ----------
+    name : dict
+        parameter name
+    value : float
+        initial parameter value
+    bounds : array-like
+        lower and upper bounds on the parameter. ignored if distribution != &#39;uniform&#39;
+    distribution : str
+        prior distribution name in scipy.stats naming convention
+    dist_kwargs : dict
+        arguments to specify non-uniform priors, for example &#39;mean&#39; and &#39;sigma&#39; if 
+        distribution is &#39;norm&#39;
+    fixed : bool
+        whether to fix or vary parameter during sampling
+    
+    Methods
+    -------
+    set(**attributes):
+        Set any of the parameter&#39;s attributes. Any attribute not explicitly 
+        set is left at the default. 
+    
+    &#34;&#34;&#34;
+    
+    def __init__(self, name, value, bounds, distribution = &#39;uniform&#39;, dist_kwargs = None, fixed = False):
+        self.name = name
+        self.value = value
+        self.bounds = bounds
+        self.distribution = distribution
+        self.dist_kwargs = dist_kwargs
+        self.fixed = fixed
+        
+        self.param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
+                          distribution = self.distribution, dist_kwargs = self.dist_kwargs,
+                          fixed = self.fixed)
+        
+        super().__init__(self.param_dict)
+        
+    def set(self, value = None, bounds = None, distribution = None, dist_kwargs = None, fixed = None):
+        
+        if value is not None:
+            self.value = value
+        if bounds is not None:
+            self.bounds = bounds
+        if distribution is not None:
+            self.distribution = distribution
+        if dist_kwargs is not None:
+            self.dist_kwargs = dist_kwargs
+        if fixed is not None:
+            self.fixed = fixed
+            
+        self.param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
+                          distribution = self.distribution, dist_kwargs = self.dist_kwargs,
+                          fixed = self.fixed)
+        
+        super().__init__(self.param_dict)
+        
+def make_params(imf_type, sfh_type): # add SFH TYPE
+    
+    parameters = {};
+    param_mapper = {};
+    parameters[&#39;log_int&#39;] = SWParameter(&#39;log_int&#39;, 2, [2, 6])
+    parameters[&#39;bf&#39;] = SWParameter(&#39;bf&#39;, 0.2, [0, 1])
+
+    parameters[&#39;dm&#39;] = SWParameter(&#39;dm&#39;, 0, [0, 1], fixed = True)
+    parameters[&#39;sig_dm&#39;] = SWParameter(&#39;sig_dm&#39;, 0.1, [0, 0.5], fixed = True)
+    
+    ## ADD EXTINCTION WITH EXTINCT PACKAGE    
+
+    if imf_type == &#39;spl&#39;:
+        
+        parameters[&#39;slope&#39;] = SWParameter(&#39;slope&#39;, -2.3, [-4, -1])
+        
+    
+    elif imf_type == &#39;bpl&#39;:
+        
+        parameters[&#39;alow&#39;] = SWParameter(&#39;alow&#39;, -1.3, [-2, 0])
+        parameters[&#39;ahigh&#39;] = SWParameter(&#39;ahigh&#39;, -2.3, [-4, -1])
+        parameters[&#39;bm&#39;] = SWParameter(&#39;bm&#39;, 0.5, [0.2, 0.8])
+
+    elif imf_type == &#39;ln&#39;:
+        
+        parameters[&#39;mean&#39;] = SWParameter(&#39;mean&#39;, 0.25, [0.1, 0.8])
+        parameters[&#39;sigma&#39;] = SWParameter(&#39;sigma&#39;, 0.6, [0.1, 1])
+        parameters[&#39;bm&#39;] = SWParameter(&#39;bm&#39;, 1, [0.8, 1.2])
+        parameters[&#39;slope&#39;] = SWParameter(&#39;slope&#39;, -2.3, [-3, -1])
+
+    if sfh_type == &#39;gaussian&#39;:
+        parameters[&#39;age&#39;] = SWParameter(&#39;age&#39;, 5, [0.1, 13.4])
+        parameters[&#39;sig_age&#39;] = SWParameter(&#39;sig_age&#39;, 1, [0.1, 5])
+        parameters[&#39;feh&#39;] = SWParameter(&#39;feh&#39;, -1, [-4, 1])
+        parameters[&#39;sig_feh&#39;] = SWParameter(&#39;sig_feh&#39;, 0.1, [0.05, 1])
+        parameters[&#39;age_feh_corr&#39;] = SWParameter(&#39;age_feh_corr&#39;, -0.5, [-1, 0])
+
+    # for ii,parameter in enumerate(parameters.keys()):
+    #     param_mapper[ii] = parameter
+    # print(param_mapper)
+    return SWParameters(parameters)#, param_mapper
+
+# def make_prior_pyabc(parameters):
+    
+#     priors = OrderedDict{};
+    
+#     for name, param in parameters.dict.items():
+        
+#         if param.fixed:
+#             priors[name] = pyabc.RV(param.distribution, param.value, 0)
+#             continue
+        
+        
+#         lower = param.bounds[0]
+#         upper = param.bounds[1]
+        
+#         if param.distribution == &#39;uniform&#39;:    
+#             priors[name] = pyabc.RV(param.distribution, lower, upper - lower)
+            
+#         elif param.distribution == &#39;norm&#39;:
+#             try:
+#                 mean = param.dist_kwargs[&#39;mean&#39;]
+#                 sigma = param.dist_kwargs[&#39;sigma&#39;]
+#             except:
+#                 raise ValueError(&#39;please pass valid distribution arguments!&#39;)
+            
+#             priors[name] = pyabc.RV(param.distribution, mean, sigma)
+            
+#         else:
+#             raise ValueError(&#39;invalid distribution name&#39;)
+            
+#     pyabc_priors = pyabc.Distribution(**priors)
+    
+#     return pyabc_priors
+
+
+
+def print_prior_summary(parameters):
+    
+    for name, param in parameters.items():
+        print(&#39;-&#39;*10)
+        print(name)
+        print(&#39;-&#39;*10)
+        print(&#39;Distribution: &#39;, end =&#34; &#34;)
+        print(param.distribution)
+        print(&#39;Bounds: &#39;, end =&#34; &#34;)
+        print(param.bounds)
+        print(&#39;Value: &#39;, end =&#34; &#34;)
+        print(param.value)
+        print(&#39;Fixed: &#39;, end =&#34; &#34;)
+        print(param.fixed)
+        print(&#39;dist_kwargs: &#39;, end =&#34; &#34;)
+        print(param.dist_kwargs)
+
+class MultipleIndependent(Distribution):
+    &#34;&#34;&#34;Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
+
+    Every element of the sequence is treated as independent from the other elements.
+    Single elements can be multivariate with dependent dimensions, e.g.,:
+        - [
+            Gamma(torch.zeros(1), torch.ones(1)),
+            Beta(torch.zeros(1), torch.ones(1)),
+            MVG(torch.ones(2), torch.tensor([[1, .1], [.1, 1.]]))
+        ]
+        - [
+            Uniform(torch.zeros(1), torch.ones(1)),
+            Uniform(torch.ones(1), 2.0 * torch.ones(1))]    
+    &#34;&#34;&#34;
+
+    def __init__(
+        self, dists: Sequence[Distribution], validate_args=None,
+    ):
+        self._check_distributions(dists)
+
+        self.dists = dists
+        # numel() instead of event_shape because for all dists both is possible,
+        # event_shape=[1] or batch_shape=[1]
+        self.dims_per_dist = torch.as_tensor([d.sample().numel() for d in self.dists])
+        self.ndims = torch.sum(torch.as_tensor(self.dims_per_dist)).item()
+
+        super().__init__(
+            batch_shape=torch.Size([]),  # batch size was ensured to be &lt;= 1 above.
+            event_shape=torch.Size(
+                [self.ndims]
+            ),  # Event shape is the sum of all ndims.
+            validate_args=validate_args,
+        )
+
+    def _check_distributions(self, dists):
+        &#34;&#34;&#34;Check if dists is Sequence and longer 1 and check every member.&#34;&#34;&#34;
+        assert isinstance(
+            dists, Sequence
+        ), f&#34;&#34;&#34;The combination of independent priors must be of type Sequence, is 
+               {type(dists)}.&#34;&#34;&#34;
+        assert len(dists) &gt; 1, &#34;Provide at least 2 distributions to combine.&#34;
+        # Check every element of the sequence.
+        [self._check_distribution(d) for d in dists]
+
+    def _check_distribution(self, dist: Distribution):
+        &#34;&#34;&#34;Check type and shape of a single input distribution.&#34;&#34;&#34;
+
+        assert not isinstance(
+            dist, MultipleIndependent
+        ), &#34;Nesting of combined distributions is not possible.&#34;
+        assert isinstance(
+            dist, Distribution
+        ), &#34;Distribution must be a PyTorch distribution.&#34;
+        # Make sure batch shape is smaller or equal to 1.
+        assert dist.batch_shape in (
+            torch.Size([1]),
+            torch.Size([0]),
+            torch.Size([]),
+        ), &#34;The batch shape of every distribution must be smaller or equal to 1.&#34;
+
+        assert (
+            len(dist.batch_shape) &gt; 0 or len(dist.event_shape) &gt; 0
+        ), &#34;&#34;&#34;One of the distributions you passed is defined over a scalar only. Make
+        sure pass distributions with one of event_shape or batch_shape &gt; 0: For example
+            - instead of Uniform(0.0, 1.0) pass Uniform(torch.zeros(1), torch.ones(1))
+            - instead of Beta(1.0, 2.0) pass Beta(tensor([1.0]), tensor([2.0])).
+        &#34;&#34;&#34;
+
+    def sample(self, sample_shape=torch.Size()) -&gt; Tensor:
+
+        # Sample from every sub distribution and concatenate samples.
+        sample = torch.cat([d.sample(sample_shape) for d in self.dists], dim=-1)
+
+        # This reshape is needed to cover the case .sample() vs. .sample((n, )).
+        if sample_shape == torch.Size():
+            sample = sample.reshape(self.ndims)
+        else:
+            sample = sample.reshape(-1, self.ndims)
+
+        return sample
+
+    def log_prob(self, value) -&gt; Tensor:
+
+        value = self._prepare_value(value)
+
+        # Evaluate value per distribution, taking into account that individual
+        # distributions can be multivariate.
+        num_samples = value.shape[0]
+        log_probs = []
+        dims_covered = 0
+        for idx, d in enumerate(self.dists):
+            ndims = self.dims_per_dist[idx].item()
+            v = value[:, dims_covered : dims_covered + ndims]
+            # Reshape here to ensure all returned log_probs are 2D for concatenation.
+            log_probs.append(d.log_prob(v).reshape(num_samples, 1))
+            dims_covered += ndims
+
+        # Sum accross last dimension to get joint log prob over all distributions.
+        return torch.cat(log_probs, dim=1).sum(-1)
+
+    def _prepare_value(self, value) -&gt; Tensor:
+        &#34;&#34;&#34;Return input value with fixed shape.
+
+        Raises: 
+            AssertionError: if value has more than 2 dimensions or invalid size in
+                2nd dimension.
+        &#34;&#34;&#34;
+
+        if value.ndim &lt; 2:
+            value = value.unsqueeze(0)
+
+        assert (
+            value.ndim == 2
+        ), f&#34;value in log_prob must have ndim &lt;= 2, it is {value.ndim}.&#34;
+
+        batch_shape, num_value_dims = value.shape
+
+        assert (
+            num_value_dims == self.ndims
+        ), f&#34;Number of dimensions must match dimensions of this joint: {self.ndims}.&#34;
+
+        return value
+
+    @property
+    def mean(self) -&gt; Tensor:
+        return torch.cat([d.mean for d in self.dists])
+
+    @property
+    def variance(self) -&gt; Tensor:
+        return torch.cat([d.variance for d in self.dists])
+
+
+if __name__ == &#39;__main__&#39;:
+    p = make_params(&#39;bpl&#39;)
+    print(make_prior(p))
+    print_prior_summary(p)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="starwave.parameters.make_params"><code class="name flex">
+<span>def <span class="ident">make_params</span></span>(<span>imf_type, sfh_type)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_params(imf_type, sfh_type): # add SFH TYPE
+    
+    parameters = {};
+    param_mapper = {};
+    parameters[&#39;log_int&#39;] = SWParameter(&#39;log_int&#39;, 2, [2, 6])
+    parameters[&#39;bf&#39;] = SWParameter(&#39;bf&#39;, 0.2, [0, 1])
+
+    parameters[&#39;dm&#39;] = SWParameter(&#39;dm&#39;, 0, [0, 1], fixed = True)
+    parameters[&#39;sig_dm&#39;] = SWParameter(&#39;sig_dm&#39;, 0.1, [0, 0.5], fixed = True)
+    
+    ## ADD EXTINCTION WITH EXTINCT PACKAGE    
+
+    if imf_type == &#39;spl&#39;:
+        
+        parameters[&#39;slope&#39;] = SWParameter(&#39;slope&#39;, -2.3, [-4, -1])
+        
+    
+    elif imf_type == &#39;bpl&#39;:
+        
+        parameters[&#39;alow&#39;] = SWParameter(&#39;alow&#39;, -1.3, [-2, 0])
+        parameters[&#39;ahigh&#39;] = SWParameter(&#39;ahigh&#39;, -2.3, [-4, -1])
+        parameters[&#39;bm&#39;] = SWParameter(&#39;bm&#39;, 0.5, [0.2, 0.8])
+
+    elif imf_type == &#39;ln&#39;:
+        
+        parameters[&#39;mean&#39;] = SWParameter(&#39;mean&#39;, 0.25, [0.1, 0.8])
+        parameters[&#39;sigma&#39;] = SWParameter(&#39;sigma&#39;, 0.6, [0.1, 1])
+        parameters[&#39;bm&#39;] = SWParameter(&#39;bm&#39;, 1, [0.8, 1.2])
+        parameters[&#39;slope&#39;] = SWParameter(&#39;slope&#39;, -2.3, [-3, -1])
+
+    if sfh_type == &#39;gaussian&#39;:
+        parameters[&#39;age&#39;] = SWParameter(&#39;age&#39;, 5, [0.1, 13.4])
+        parameters[&#39;sig_age&#39;] = SWParameter(&#39;sig_age&#39;, 1, [0.1, 5])
+        parameters[&#39;feh&#39;] = SWParameter(&#39;feh&#39;, -1, [-4, 1])
+        parameters[&#39;sig_feh&#39;] = SWParameter(&#39;sig_feh&#39;, 0.1, [0.05, 1])
+        parameters[&#39;age_feh_corr&#39;] = SWParameter(&#39;age_feh_corr&#39;, -0.5, [-1, 0])
+
+    # for ii,parameter in enumerate(parameters.keys()):
+    #     param_mapper[ii] = parameter
+    # print(param_mapper)
+    return SWParameters(parameters)#, param_mapper</code></pre>
+</details>
+</dd>
+<dt id="starwave.parameters.print_prior_summary"><code class="name flex">
+<span>def <span class="ident">print_prior_summary</span></span>(<span>parameters)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_prior_summary(parameters):
+    
+    for name, param in parameters.items():
+        print(&#39;-&#39;*10)
+        print(name)
+        print(&#39;-&#39;*10)
+        print(&#39;Distribution: &#39;, end =&#34; &#34;)
+        print(param.distribution)
+        print(&#39;Bounds: &#39;, end =&#34; &#34;)
+        print(param.bounds)
+        print(&#39;Value: &#39;, end =&#34; &#34;)
+        print(param.value)
+        print(&#39;Fixed: &#39;, end =&#34; &#34;)
+        print(param.fixed)
+        print(&#39;dist_kwargs: &#39;, end =&#34; &#34;)
+        print(param.dist_kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="starwave.parameters.MultipleIndependent"><code class="flex name class">
+<span>class <span class="ident">MultipleIndependent</span></span>
+<span>(</span><span>dists: Sequence[torch.distributions.distribution.Distribution], validate_args=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.</p>
+<p>Every element of the sequence is treated as independent from the other elements.
+Single elements can be multivariate with dependent dimensions, e.g.,:
+- [
+Gamma(torch.zeros(1), torch.ones(1)),
+Beta(torch.zeros(1), torch.ones(1)),
+MVG(torch.ones(2), torch.tensor([[1, .1], [.1, 1.]]))
+]
+- [
+Uniform(torch.zeros(1), torch.ones(1)),
+Uniform(torch.ones(1), 2.0 * torch.ones(1))]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MultipleIndependent(Distribution):
+    &#34;&#34;&#34;Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
+
+    Every element of the sequence is treated as independent from the other elements.
+    Single elements can be multivariate with dependent dimensions, e.g.,:
+        - [
+            Gamma(torch.zeros(1), torch.ones(1)),
+            Beta(torch.zeros(1), torch.ones(1)),
+            MVG(torch.ones(2), torch.tensor([[1, .1], [.1, 1.]]))
+        ]
+        - [
+            Uniform(torch.zeros(1), torch.ones(1)),
+            Uniform(torch.ones(1), 2.0 * torch.ones(1))]    
+    &#34;&#34;&#34;
+
+    def __init__(
+        self, dists: Sequence[Distribution], validate_args=None,
+    ):
+        self._check_distributions(dists)
+
+        self.dists = dists
+        # numel() instead of event_shape because for all dists both is possible,
+        # event_shape=[1] or batch_shape=[1]
+        self.dims_per_dist = torch.as_tensor([d.sample().numel() for d in self.dists])
+        self.ndims = torch.sum(torch.as_tensor(self.dims_per_dist)).item()
+
+        super().__init__(
+            batch_shape=torch.Size([]),  # batch size was ensured to be &lt;= 1 above.
+            event_shape=torch.Size(
+                [self.ndims]
+            ),  # Event shape is the sum of all ndims.
+            validate_args=validate_args,
+        )
+
+    def _check_distributions(self, dists):
+        &#34;&#34;&#34;Check if dists is Sequence and longer 1 and check every member.&#34;&#34;&#34;
+        assert isinstance(
+            dists, Sequence
+        ), f&#34;&#34;&#34;The combination of independent priors must be of type Sequence, is 
+               {type(dists)}.&#34;&#34;&#34;
+        assert len(dists) &gt; 1, &#34;Provide at least 2 distributions to combine.&#34;
+        # Check every element of the sequence.
+        [self._check_distribution(d) for d in dists]
+
+    def _check_distribution(self, dist: Distribution):
+        &#34;&#34;&#34;Check type and shape of a single input distribution.&#34;&#34;&#34;
+
+        assert not isinstance(
+            dist, MultipleIndependent
+        ), &#34;Nesting of combined distributions is not possible.&#34;
+        assert isinstance(
+            dist, Distribution
+        ), &#34;Distribution must be a PyTorch distribution.&#34;
+        # Make sure batch shape is smaller or equal to 1.
+        assert dist.batch_shape in (
+            torch.Size([1]),
+            torch.Size([0]),
+            torch.Size([]),
+        ), &#34;The batch shape of every distribution must be smaller or equal to 1.&#34;
+
+        assert (
+            len(dist.batch_shape) &gt; 0 or len(dist.event_shape) &gt; 0
+        ), &#34;&#34;&#34;One of the distributions you passed is defined over a scalar only. Make
+        sure pass distributions with one of event_shape or batch_shape &gt; 0: For example
+            - instead of Uniform(0.0, 1.0) pass Uniform(torch.zeros(1), torch.ones(1))
+            - instead of Beta(1.0, 2.0) pass Beta(tensor([1.0]), tensor([2.0])).
+        &#34;&#34;&#34;
+
+    def sample(self, sample_shape=torch.Size()) -&gt; Tensor:
+
+        # Sample from every sub distribution and concatenate samples.
+        sample = torch.cat([d.sample(sample_shape) for d in self.dists], dim=-1)
+
+        # This reshape is needed to cover the case .sample() vs. .sample((n, )).
+        if sample_shape == torch.Size():
+            sample = sample.reshape(self.ndims)
+        else:
+            sample = sample.reshape(-1, self.ndims)
+
+        return sample
+
+    def log_prob(self, value) -&gt; Tensor:
+
+        value = self._prepare_value(value)
+
+        # Evaluate value per distribution, taking into account that individual
+        # distributions can be multivariate.
+        num_samples = value.shape[0]
+        log_probs = []
+        dims_covered = 0
+        for idx, d in enumerate(self.dists):
+            ndims = self.dims_per_dist[idx].item()
+            v = value[:, dims_covered : dims_covered + ndims]
+            # Reshape here to ensure all returned log_probs are 2D for concatenation.
+            log_probs.append(d.log_prob(v).reshape(num_samples, 1))
+            dims_covered += ndims
+
+        # Sum accross last dimension to get joint log prob over all distributions.
+        return torch.cat(log_probs, dim=1).sum(-1)
+
+    def _prepare_value(self, value) -&gt; Tensor:
+        &#34;&#34;&#34;Return input value with fixed shape.
+
+        Raises: 
+            AssertionError: if value has more than 2 dimensions or invalid size in
+                2nd dimension.
+        &#34;&#34;&#34;
+
+        if value.ndim &lt; 2:
+            value = value.unsqueeze(0)
+
+        assert (
+            value.ndim == 2
+        ), f&#34;value in log_prob must have ndim &lt;= 2, it is {value.ndim}.&#34;
+
+        batch_shape, num_value_dims = value.shape
+
+        assert (
+            num_value_dims == self.ndims
+        ), f&#34;Number of dimensions must match dimensions of this joint: {self.ndims}.&#34;
+
+        return value
+
+    @property
+    def mean(self) -&gt; Tensor:
+        return torch.cat([d.mean for d in self.dists])
+
+    @property
+    def variance(self) -&gt; Tensor:
+        return torch.cat([d.variance for d in self.dists])</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.distributions.distribution.Distribution</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="starwave.parameters.MultipleIndependent.mean"><code class="name">var <span class="ident">mean</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"><p>Returns the mean of the distribution.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mean(self) -&gt; Tensor:
+    return torch.cat([d.mean for d in self.dists])</code></pre>
+</details>
+</dd>
+<dt id="starwave.parameters.MultipleIndependent.variance"><code class="name">var <span class="ident">variance</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"><p>Returns the variance of the distribution.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def variance(self) -&gt; Tensor:
+    return torch.cat([d.variance for d in self.dists])</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="starwave.parameters.MultipleIndependent.log_prob"><code class="name flex">
+<span>def <span class="ident">log_prob</span></span>(<span>self, value) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the log of the probability density/mass function evaluated at
+<code>value</code>.</p>
+<h2 id="args">Args</h2>
+<p>value (Tensor):</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def log_prob(self, value) -&gt; Tensor:
+
+    value = self._prepare_value(value)
+
+    # Evaluate value per distribution, taking into account that individual
+    # distributions can be multivariate.
+    num_samples = value.shape[0]
+    log_probs = []
+    dims_covered = 0
+    for idx, d in enumerate(self.dists):
+        ndims = self.dims_per_dist[idx].item()
+        v = value[:, dims_covered : dims_covered + ndims]
+        # Reshape here to ensure all returned log_probs are 2D for concatenation.
+        log_probs.append(d.log_prob(v).reshape(num_samples, 1))
+        dims_covered += ndims
+
+    # Sum accross last dimension to get joint log prob over all distributions.
+    return torch.cat(log_probs, dim=1).sum(-1)</code></pre>
+</details>
+</dd>
+<dt id="starwave.parameters.MultipleIndependent.sample"><code class="name flex">
+<span>def <span class="ident">sample</span></span>(<span>self, sample_shape=torch.Size([])) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a sample_shape shaped sample or sample_shape shaped batch of
+samples if the distribution parameters are batched.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample(self, sample_shape=torch.Size()) -&gt; Tensor:
+
+    # Sample from every sub distribution and concatenate samples.
+    sample = torch.cat([d.sample(sample_shape) for d in self.dists], dim=-1)
+
+    # This reshape is needed to cover the case .sample() vs. .sample((n, )).
+    if sample_shape == torch.Size():
+        sample = sample.reshape(self.ndims)
+    else:
+        sample = sample.reshape(-1, self.ndims)
+
+    return sample</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="starwave.parameters.SWDist"><code class="flex name class">
+<span>class <span class="ident">SWDist</span></span>
+<span>(</span><span>distribution)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SWDist:
+    def __init__(self, distribution):
+        self.dist = distribution # distribution is a scipy object
+
+    def sample(self, N):
+        return self.dist.rvs(N)
+
+    def log_prob(self, x):
+        return self.dist.logpdf(x)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="starwave.parameters.SWDist.log_prob"><code class="name flex">
+<span>def <span class="ident">log_prob</span></span>(<span>self, x)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def log_prob(self, x):
+    return self.dist.logpdf(x)</code></pre>
+</details>
+</dd>
+<dt id="starwave.parameters.SWDist.sample"><code class="name flex">
+<span>def <span class="ident">sample</span></span>(<span>self, N)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample(self, N):
+    return self.dist.rvs(N)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="starwave.parameters.SWParameter"><code class="flex name class">
+<span>class <span class="ident">SWParameter</span></span>
+<span>(</span><span>name, value, bounds, distribution='uniform', dist_kwargs=None, fixed=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>dict-like class for each parameter's prior</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>dict</code></dt>
+<dd>parameter name</dd>
+<dt><strong><code>value</code></strong> :&ensp;<code>float</code></dt>
+<dd>initial parameter value</dd>
+<dt><strong><code>bounds</code></strong> :&ensp;<code>array-like</code></dt>
+<dd>lower and upper bounds on the parameter. ignored if distribution != 'uniform'</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>str</code></dt>
+<dd>prior distribution name in scipy.stats naming convention</dd>
+<dt><strong><code>dist_kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>arguments to specify non-uniform priors, for example 'mean' and 'sigma' if
+distribution is 'norm'</dd>
+<dt><strong><code>fixed</code></strong> :&ensp;<code>bool</code></dt>
+<dd>whether to fix or vary parameter during sampling</dd>
+</dl>
+<h2 id="methods">Methods</h2>
+<p>set(**attributes):
+Set any of the parameter's attributes. Any attribute not explicitly
+set is left at the default.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SWParameter(OrderedDict):
+    &#34;&#34;&#34;
+    dict-like class for each parameter&#39;s prior
+    
+    Attributes
+    ----------
+    name : dict
+        parameter name
+    value : float
+        initial parameter value
+    bounds : array-like
+        lower and upper bounds on the parameter. ignored if distribution != &#39;uniform&#39;
+    distribution : str
+        prior distribution name in scipy.stats naming convention
+    dist_kwargs : dict
+        arguments to specify non-uniform priors, for example &#39;mean&#39; and &#39;sigma&#39; if 
+        distribution is &#39;norm&#39;
+    fixed : bool
+        whether to fix or vary parameter during sampling
+    
+    Methods
+    -------
+    set(**attributes):
+        Set any of the parameter&#39;s attributes. Any attribute not explicitly 
+        set is left at the default. 
+    
+    &#34;&#34;&#34;
+    
+    def __init__(self, name, value, bounds, distribution = &#39;uniform&#39;, dist_kwargs = None, fixed = False):
+        self.name = name
+        self.value = value
+        self.bounds = bounds
+        self.distribution = distribution
+        self.dist_kwargs = dist_kwargs
+        self.fixed = fixed
+        
+        self.param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
+                          distribution = self.distribution, dist_kwargs = self.dist_kwargs,
+                          fixed = self.fixed)
+        
+        super().__init__(self.param_dict)
+        
+    def set(self, value = None, bounds = None, distribution = None, dist_kwargs = None, fixed = None):
+        
+        if value is not None:
+            self.value = value
+        if bounds is not None:
+            self.bounds = bounds
+        if distribution is not None:
+            self.distribution = distribution
+        if dist_kwargs is not None:
+            self.dist_kwargs = dist_kwargs
+        if fixed is not None:
+            self.fixed = fixed
+            
+        self.param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
+                          distribution = self.distribution, dist_kwargs = self.dist_kwargs,
+                          fixed = self.fixed)
+        
+        super().__init__(self.param_dict)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.OrderedDict</li>
+<li>builtins.dict</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="starwave.parameters.SWParameter.set"><code class="name flex">
+<span>def <span class="ident">set</span></span>(<span>self, value=None, bounds=None, distribution=None, dist_kwargs=None, fixed=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set(self, value = None, bounds = None, distribution = None, dist_kwargs = None, fixed = None):
+    
+    if value is not None:
+        self.value = value
+    if bounds is not None:
+        self.bounds = bounds
+    if distribution is not None:
+        self.distribution = distribution
+    if dist_kwargs is not None:
+        self.dist_kwargs = dist_kwargs
+    if fixed is not None:
+        self.fixed = fixed
+        
+    self.param_dict = dict(name = self.name, value = self.value, bounds = self.bounds,
+                      distribution = self.distribution, dist_kwargs = self.dist_kwargs,
+                      fixed = self.fixed)
+    
+    super().__init__(self.param_dict)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="starwave.parameters.SWParameters"><code class="flex name class">
+<span>class <span class="ident">SWParameters</span></span>
+<span>(</span><span>params_dict)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>dict-like class that contains SWParameter objects</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>dict</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dictionary of SWParameter objects</dd>
+</dl>
+<h2 id="methods">Methods</h2>
+<p>get_dict():
+Returns the base dictionary of SWParameter objects
+summary():
+Prints a summary of all contained parameters and their priors
+to_pyabc():
+Converts parameters into pyABC prior distributions</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SWParameters(OrderedDict):
+    &#34;&#34;&#34;
+    dict-like class that contains SWParameter objects
+    
+    Attributes
+    ----------
+    dict : dict
+        dictionary of SWParameter objects
+    
+    Methods
+    -------
+    get_dict():
+        Returns the base dictionary of SWParameter objects
+    summary():
+        Prints a summary of all contained parameters and their priors
+    to_pyabc():
+        Converts parameters into pyABC prior distributions
+    
+    &#34;&#34;&#34;
+    
+    def __init__(self, params_dict):
+        
+        super().__init__(params_dict)
+        self.dict = params_dict
+        
+    def __getitem__(self, param):
+         return self.dict[param]
+        
+    def get_values(self):
+        values_dict = {};
+        for name, param in self.dict.items():
+            values_dict[name] = param.value
+            
+        return values_dict
+    
+    def summary(self):
+        print_prior_summary(self.dict)
+
+    def to_torch(self):
+        return make_prior(self)
+        
+    def to_pyabc(self):
+        return make_prior_pyabc(self)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.OrderedDict</li>
+<li>builtins.dict</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="starwave.parameters.SWParameters.get_values"><code class="name flex">
+<span>def <span class="ident">get_values</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_values(self):
+    values_dict = {};
+    for name, param in self.dict.items():
+        values_dict[name] = param.value
+        
+    return values_dict</code></pre>
+</details>
+</dd>
+<dt id="starwave.parameters.SWParameters.summary"><code class="name flex">
+<span>def <span class="ident">summary</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def summary(self):
+    print_prior_summary(self.dict)</code></pre>
+</details>
+</dd>
+<dt id="starwave.parameters.SWParameters.to_pyabc"><code class="name flex">
+<span>def <span class="ident">to_pyabc</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_pyabc(self):
+    return make_prior_pyabc(self)</code></pre>
+</details>
+</dd>
+<dt id="starwave.parameters.SWParameters.to_torch"><code class="name flex">
+<span>def <span class="ident">to_torch</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_torch(self):
+    return make_prior(self)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="starwave" href="index.html">starwave</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="starwave.parameters.make_params" href="#starwave.parameters.make_params">make_params</a></code></li>
+<li><code><a title="starwave.parameters.print_prior_summary" href="#starwave.parameters.print_prior_summary">print_prior_summary</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="starwave.parameters.MultipleIndependent" href="#starwave.parameters.MultipleIndependent">MultipleIndependent</a></code></h4>
+<ul class="">
+<li><code><a title="starwave.parameters.MultipleIndependent.log_prob" href="#starwave.parameters.MultipleIndependent.log_prob">log_prob</a></code></li>
+<li><code><a title="starwave.parameters.MultipleIndependent.mean" href="#starwave.parameters.MultipleIndependent.mean">mean</a></code></li>
+<li><code><a title="starwave.parameters.MultipleIndependent.sample" href="#starwave.parameters.MultipleIndependent.sample">sample</a></code></li>
+<li><code><a title="starwave.parameters.MultipleIndependent.variance" href="#starwave.parameters.MultipleIndependent.variance">variance</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="starwave.parameters.SWDist" href="#starwave.parameters.SWDist">SWDist</a></code></h4>
+<ul class="">
+<li><code><a title="starwave.parameters.SWDist.log_prob" href="#starwave.parameters.SWDist.log_prob">log_prob</a></code></li>
+<li><code><a title="starwave.parameters.SWDist.sample" href="#starwave.parameters.SWDist.sample">sample</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="starwave.parameters.SWParameter" href="#starwave.parameters.SWParameter">SWParameter</a></code></h4>
+<ul class="">
+<li><code><a title="starwave.parameters.SWParameter.set" href="#starwave.parameters.SWParameter.set">set</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="starwave.parameters.SWParameters" href="#starwave.parameters.SWParameters">SWParameters</a></code></h4>
+<ul class="">
+<li><code><a title="starwave.parameters.SWParameters.get_values" href="#starwave.parameters.SWParameters.get_values">get_values</a></code></li>
+<li><code><a title="starwave.parameters.SWParameters.summary" href="#starwave.parameters.SWParameters.summary">summary</a></code></li>
+<li><code><a title="starwave.parameters.SWParameters.to_pyabc" href="#starwave.parameters.SWParameters.to_pyabc">to_pyabc</a></code></li>
+<li><code><a title="starwave.parameters.SWParameters.to_torch" href="#starwave.parameters.SWParameters.to_torch">to_torch</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>starwave.starwave API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>starwave.starwave</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.kernel_approximation import Nystroem
+from sklearn.preprocessing import MinMaxScaler
+from scipy import stats
+import os
+import sys
+import functools
+from sklearn.neighbors import KDTree,NearestNeighbors
+
+path = os.path.abspath(__file__)
+dir_path = os.path.dirname(path)
+sys.path.append(dir_path)
+
+from generalrandom import GeneralRandom
+from distributions import *
+from plot import *
+from parameters import *
+from getmags import *
+import intNN 
+
+import torch
+import sbi
+from sbi import utils as utils
+from sbi.utils import user_input_checks
+from sbi.inference import SNPE, prepare_for_sbi, simulate_for_sbi
+from sbi.utils.get_nn_models import posterior_nn
+
+from joblib.externals.loky import set_loky_pickler
+set_loky_pickler(&#34;dill&#34;)
+
+class StarWave:
+    &#34;&#34;&#34;
+    StarWave: fitting the stellar birth function of resolved stellar populations 
+    with approximate Bayesian computation. 
+    
+    &#34;&#34;&#34;
+
+    def __init__(self, isodf, asdf, bands, imf_type, sfh_type = &#39;gaussian&#39;,
+        sfh_grid = None):
+
+        if sfh_type == &#39;grid&#39; and sfh_grid is None:
+            print(&#39;please pass an sfh_grid if you want to use grid-based SFH sampling!&#39;)
+            raise
+
+        self.imf_type = imf_type
+        self.sfh_type = sfh_type
+        self.params = make_params(imf_type, sfh_type)
+        self.make_prior(self.params) ## INITIALIZE FIXED PARAMS VECTOR
+        self.bands = bands
+        self.iso_int = intNN.intNN(isodf, self.bands)
+        self.asdf = asdf
+        self.return_inputmags = False
+
+        self.bands_in = [band + &#39;_in&#39; for band in bands]
+        self.bands_out = [band + &#39;_out&#39; for band in bands]
+
+        self.asdf_noise = self.asdf[self.bands_out].to_numpy() - self.asdf[self.bands_in].to_numpy()
+
+        self.kdtree = KDTree(asdf[self.bands_in])
+        self.trgb = -100
+        self.lim_logmass = np.log(0.1)
+        self.sfh_grid = sfh_grid
+
+        self.debug = False
+        
+        print(&#39;initalized starwave with %s bands, %s IMF, and default priors&#39; % (str(bands), imf_type))
+        print_prior_summary(self.params)
+
+    def init_scaler(self, observed_cmd, gamma = 0.5):
+        self.cmd_scaler = MinMaxScaler()
+        self.cmd_scaler.fit(observed_cmd);
+        scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
+        Phi_approx = Nystroem(kernel = &#39;rbf&#39;, n_components=50, gamma = gamma) 
+        Phi_approx.fit(scaled_observed_cmd)
+        self.mapping = Phi_approx.transform
+        print(&#39;scaler initialized and mapping defined!&#39;)
+        return scaled_observed_cmd
+
+    def get_cmd(self, nstars, gr_dict):
+
+        input_mags = np.empty((nstars, len(self.bands)))
+        input_mags[:] = np.nan
+
+        masses = gr_dict[&#39;logM&#39;].sample(nstars)
+        binqs = gr_dict[&#39;BinQ&#39;].sample(nstars)
+        sfhs = gr_dict[&#39;SFH&#39;].sample(nstars)
+        dms = gr_dict[&#39;DM&#39;].sample(nstars)
+
+
+        for ii in range(nstars):
+
+            mass = masses[ii]
+            binq = binqs[ii]
+            age, feh = sfhs[ii]
+            dm = dms[ii]
+
+            if mass &lt; self.lim_logmass or np.isnan(age) or np.isnan(feh):
+                continue
+
+            input_mag = get_absolute_mags(mass, age, feh, binq, self.iso_int, self.bands)
+
+            input_mags[ii, :] = input_mag + dm
+
+        nans = (np.isnan(input_mags) + (input_mags &lt; self.trgb)).any(axis = 1)
+
+        input_mags = input_mags[~nans]
+
+        if len(input_mags) == 0:
+            return input_mags, input_mags
+
+        idxs = self.kdtree.query(input_mags)[1][:, 0]
+
+        output_mags = input_mags + self.asdf_noise[idxs]
+
+        nans = np.isnan(output_mags).any(axis = 1)
+
+        output_mags = output_mags[~nans]
+
+
+        return input_mags, output_mags 
+    
+    def make_cmd(self, mags):
+        cmd = mags
+        for ii in range(mags.shape[1] - 1):
+            cmd[:, ii + 1] -= cmd[:, 0]
+
+        return cmd
+
+    def best_gamma(self, cmd, q = 0.68, fac = 1, NN = 5): # pass a scaled CMD
+        nbr = NearestNeighbors(n_neighbors = NN, algorithm = &#39;kd_tree&#39;, metric = &#39;minkowski&#39;, p = 2)
+        nbr.fit(cmd)
+        dst, idx = nbr.kneighbors(cmd, return_distance = True)
+        dst = dst[:, -1] # pick NNth distance
+
+        best_dist = np.quantile(dst, q)
+        gamma = 1 / (2 * (fac * best_dist)**2)
+
+        return gamma
+
+
+    def set_sfh_dist(self, pdict, sfh_type):
+
+        if sfh_type == &#39;gaussian&#39;:
+            cov = pdict[&#39;age_feh_corr&#39;] * pdict[&#39;sig_age&#39;] * pdict[&#39;sig_feh&#39;]
+            covmat = np.array([[pdict[&#39;sig_age&#39;], cov], [cov, pdict[&#39;sig_feh&#39;]]])
+
+
+            if not isPD(covmat):
+                covmat = nearestPD(covmat)
+                print(&#39;found nearest SFH covmat...&#39;)
+
+            means = np.array([pdict[&#39;age&#39;], pdict[&#39;feh&#39;]])
+
+            return SW_SFH(stats.multivariate_normal(mean = means, cov = covmat, allow_singular = True))
+
+        elif sfh_type == &#39;grid&#39;:
+
+            if self.sfh_grid is None:
+                print(&#39;must pass an sfh_grid to use grid-based sampling!&#39;)
+                raise
+
+            else:
+                return GridSFH(self.sfh_grid)
+
+
+    def make_prior(self, parameters):
+    
+        priors = [];
+        self.fixed_params = {};
+        self.param_mapper = {};
+        idx = 0
+
+        for ii,(name, param) in enumerate(parameters.dict.items()):
+            
+            if param.fixed:
+                self.fixed_params[name] = param.value
+                continue
+            
+            
+            lower = param.bounds[0]
+            upper = param.bounds[1]
+            
+            if param.distribution == &#39;uniform&#39;:
+                distribution = torch.distributions.Uniform(lower*torch.ones(1), upper*torch.ones(1))
+                priors.append(distribution)
+                
+            elif param.distribution == &#39;norm&#39;:
+                try:
+                    mean = param.dist_kwargs[&#39;mean&#39;]
+                    sigma = param.dist_kwargs[&#39;sigma&#39;]
+                except:
+                    raise ValueError(&#39;please pass valid distribution arguments!&#39;)
+                distribution = torch.distributions.Normal(torch.tensor(mean), torch.tensor(sigma))
+                priors.append(distribution)
+                
+            else:
+                raise ValueError(&#39;invalid distribution name&#39;)
+
+            self.param_mapper[name] = idx
+            idx += 1 # IDX maps the vector of sampled parameters, leaving apart the fixed ones. 
+    
+        return priors
+
+    def sample_cmd(self, params, model):
+
+        is_pdict = False
+
+        if isinstance(params, torch.FloatTensor):
+            params = params.detach().cpu().numpy()
+        elif isinstance(params, (list, np.ndarray)):
+            pass
+        elif isinstance(params, dict):
+            pdict = params
+            is_pdict = True
+
+
+        self.make_prior(self.params) # Re-initialize priors, check fixed parameters
+
+        pdict = {};
+        for name in self.params.keys():
+            if name in self.fixed_params.keys():
+                pdict[name] = self.fixed_params[name]
+            else:
+                if is_pdict:
+                    pdict[name] = params[name] # if params are dictionary  
+                else:
+                    pdict[name] = params[self.param_mapper[name]] # if params are array or tensor
+
+        # if self.debug:
+        #     print(&#39;param dictionary in sample_cmd:&#39; + str(pdict))
+
+        if model == &#39;spl&#39;:
+            gr_dict = {&#39;logM&#39;:set_GR_spl(pdict[&#39;slope&#39;])}
+        elif model == &#39;bpl&#39;:
+            gr_dict = {&#39;logM&#39;:set_GR_bpl(pdict[&#39;alow&#39;], pdict[&#39;ahigh&#39;], pdict[&#39;bm&#39;])}
+        elif model == &#39;ln&#39;:
+            gr_dict = {&#39;logM&#39;:set_GR_ln10full(pdict[&#39;mean&#39;], pdict[&#39;sigma&#39;], pdict[&#39;bm&#39;], pdict[&#39;slope&#39;])}
+        else:
+            print(&#39;Unrecognized model!&#39;)
+
+        gr_dict[&#39;BinQ&#39;] = set_GR_unif(pdict[&#39;bf&#39;])
+        gr_dict[&#39;SFH&#39;] = self.set_sfh_dist(pdict, self.sfh_type)
+        gr_dict[&#39;DM&#39;] = SWDist(stats.norm(loc = pdict[&#39;dm&#39;], scale = pdict[&#39;sig_dm&#39;]))
+
+        intensity = 10**pdict[&#39;log_int&#39;]
+        nstars = int(stats.poisson.rvs(intensity))
+        
+        mags_in, mags_out = self.get_cmd(nstars, gr_dict)
+        cmd_in = self.make_cmd(mags_in)
+        cmd_out = self.make_cmd(mags_out)
+        return cmd_in, cmd_out
+
+    def sample_norm_cmd(self, params, model):
+        in_cmd, out_cmd = self.sample_cmd(params, model)
+        if len(in_cmd) == 0 or len(out_cmd) == 0:
+            print(&#39;empty cmd!&#39;)
+            return self.dummy_cmd, self.dummy_cmd
+        return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
+
+    def kernel_representation(self, P, mapping):
+        Phi_P = mapping(P).sum(axis=0)
+        return Phi_P
+
+    def cmd_sim(self, params, imf_type):
+        in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
+        if self.return_inputmags:
+            return self.kernel_representation(in_cmd, self.mapping)
+        else:
+            return self.kernel_representation(out_cmd, self.mapping)
+
+    def fit_cmd(self, observed_cmd, n_rounds = 5, n_sims = 100, savename = &#39;starwave&#39;, min_acceptance_rate = 0.0001, gamma = None, 
+                    cores = 1, alpha = 0.5,
+                    statistic = &#39;output&#39;,
+                    gamma_kw = {}):
+
+
+        if cores == 1:
+            pass # IMPLEMENT SBI MULTICORE
+
+        scaled_observed_cmd = self.init_scaler(observed_cmd, gamma = gamma)
+        obs = torch.tensor(self.kernel_representation(scaled_observed_cmd, self.mapping))
+        self.obs = obs
+
+        if gamma is None:
+            print(&#39;finding optimal kernel width...&#39;)
+            gamma = self.best_gamma(scaled_observed_cmd, **gamma_kw)
+            print(&#39;setting gamma = %i&#39; % gamma)
+
+        self.dummy_cmd = np.zeros(observed_cmd.shape)
+        
+        def simcmd(imf_type):
+            return lambda params: self.cmd_sim(params, imf_type = imf_type)
+
+        Nobs = len(scaled_observed_cmd)
+
+        #self.params[&#39;log_int&#39;].set(value = np.log10(Nobs), bounds = [np.log10(Nobs/2) , np.log10(Nobs*10)])
+
+        print_prior_summary(self.params)
+        
+        prior = user_input_checks.MultipleIndependent(self.make_prior(self.params))
+        simulator = simcmd(self.imf_type)
+
+        self.simulator,self.prior = prepare_for_sbi(simulator,prior)
+
+        inference = SNPE(prior = self.prior)
+
+        self.posteriors = [];
+        proposal = self.prior
+
+        for _ in range(n_rounds):
+            print(&#39;Starting round %i of neural inference...&#39; % (_+1))
+            theta, x = simulate_for_sbi(self.simulator, proposal, num_simulations=n_sims, num_workers = cores)
+            density_estimator = inference.append_simulations(theta, x, proposal=proposal).train()
+            posterior = inference.build_posterior(density_estimator)
+            self.posteriors.append(posterior)
+            proposal = posterior.set_default_x(obs)
+
+        return self.posteriors[-1]
+
+    # def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
+
+    #     if imf_type == &#39;spl&#39;:
+    #         simulator = self.cmd_sim_spl
+    #     elif imf_type == &#39;bpl&#39;:
+    #         simulator = self.cmd_sim_bpl
+    #     elif imf_type == &#39;ln&#39;:
+    #         simulator = self.cmd_sim_ln
+
+    #     idxs = np.arange(len(df))
+    #     post_samples = df.iloc[np.random.choice(idxs, size = n_samples, p = w)]
+
+    #     self.cmd_scaler = MinMaxScaler()
+    #     self.cmd_scaler.fit(observed_cmd)
+
+    #     cmds = [self.cmd_scaler.inverse_transform(simulator(sample)[&#39;data&#39;]) for _,sample in post_samples.iterrows()]
+        
+    #     if kde:
+    #         return plot_lfs_kde(cmds)
+    #     else:
+    #         if color:
+    #             return plot_lfs(cmds, n_bins = n_bins, axis = 1), plot_lfs(cmds, n_bins = n_bins, axis = 0)
+    #         return plot_lfs(cmds, n_bins = n_bins)
+
+    #def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, n_bins = 35):
+
+
+    def load_history(self, dbpath, id):
+        def fakesim(p):
+            return dict(null = p)
+
+        dummy_abc = pyabc.ABCSMC(fakesim, None, None, sampler = pyabc.sampler.SingleCoreSampler())
+
+        return dummy_abc.load(&#34;sqlite:///&#34; + dbpath, id)
+    
+if __name__ == &#39;__main__&#39;:
+    sw = StarWave()
+    sw.params.pretty_print()
+
+# class StarWave_pyabc:
+#     &#34;&#34;&#34;
+#     StarWave: fitting the stellar birth function of resolved stellar populations 
+#     with approximate Bayesian computation. 
+    
+#     &#34;&#34;&#34;
+
+#     def __init__(self, bands = [&#39;ACS_HRC_F606W&#39;, &#39;ACS_HRC_F814W&#39;], imf_type = &#39;spl&#39;):
+                    
+#         if isinstance(imf_type, (list, np.ndarray, tuple)):
+#             pass
+#         else:
+#             imf_type = [imf_type]
+
+#         self.imf_type = imf_type
+#         self.params = [make_params(imf) for imf in imf_type]
+#         self.bands = bands
+#         self.iso_int = minimint.Interpolator(bands)
+        
+#         print(&#39;initalized starwave with %s IMF and default priors&#39; % imf_type)
+
+#     def init_scaler(self, observed_cmd, gamma = 0.5):
+#         self.cmd_scaler = MinMaxScaler()
+#         self.cmd_scaler.fit(observed_cmd);
+#         scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
+#         Phi_approx = Nystroem(kernel = &#39;rbf&#39;, n_components=50, gamma = gamma) 
+#         Phi_approx.fit(scaled_observed_cmd)
+#         self.mapping = Phi_approx.transform
+#         print(&#39;scaler initialized and mapping defined!&#39;)
+#         return scaled_observed_cmd
+
+#     def get_cmd(self, nstars, gr_dict):
+
+#         age = 8 ## logAge, Incorporate this into GR_dict too along with Av, etc. Maybe replace with scipy objects? 
+#         feh = -1 ## same as above
+
+#         cmd = np.empty((nstars, len(self.bands)))
+#         cmd[:] = np.nan
+
+#         for ii in range(nstars):
+#             mass = gr_dict[&#39;logM&#39;].sample(1)[0]
+#             age = age
+#             feh = feh
+#             binq = gr_dict[&#39;BinQ&#39;].sample(1)[0]
+
+#             input_mag = get_absolute_mags(mass, age, feh, binq, self.iso_int, self.bands)
+
+#             cmd[ii, :] = input_mag
+
+#         nans = np.isnan(cmd).any(axis = 1)
+#         cmd = cmd[~nans]
+
+#         return cmd, cmd # make input and output
+
+        
+#         # weights = self.base_weights
+
+#         # keys = [&#39;logM&#39;, &#39;BinQ&#39;]
+
+#         # for key in keys:
+#         #     new_prob = gr_dict[key].getpdf(self.simdf[key])
+#         #     weights = new_prob * weights
+        
+#         # weights = weights / np.nansum(weights)
+        
+#         # idx = np.random.choice(len(self.simdf), size = nstars, replace=True, p=weights)
+        
+#         # sel_df = self.simdf.iloc[idx]
+        
+#         # in_mags = sel_df[[&#39;input_mag1&#39;, &#39;input_mag2&#39;]].dropna().to_numpy()
+#         # out_mags = sel_df[[&#39;output_mag1&#39;, &#39;output_mag2&#39;]].dropna().to_numpy()
+
+#         #return in_mags, out_mags
+    
+#     def make_cmd(self, mags):
+#         return np.asarray( [mags[:,0] - mags[:,1], mags[:,1]] ).T
+
+#     def sample_cmd(self, params, model = &#39;spl&#39;):
+
+#         for key in params.keys():
+#             if isinstance(params[key], torch.FloatTensor):
+#                 params[key] = params[key].detach().cpu().numpy()
+            
+#         if model == &#39;spl&#39;:
+#             gr_dict = {&#39;logM&#39;:set_GR_spl(params[&#39;slope&#39;]), &#39;BinQ&#39;: set_GR_unif(params[&#39;bf&#39;])}
+#         elif model == &#39;bpl&#39;:
+#             gr_dict = {&#39;logM&#39;:set_GR_bpl(params[&#39;alow&#39;], params[&#39;ahigh&#39;], params[&#39;bm&#39;]),\
+#                        &#39;BinQ&#39;: set_GR_unif(params[&#39;bf&#39;])}
+#         elif model == &#39;ln&#39;:
+#             gr_dict = {&#39;logM&#39;:set_GR_ln10full(params[&#39;mean&#39;], params[&#39;sigma&#39;], params[&#39;bm&#39;], \
+#                     params[&#39;slope&#39;]), &#39;BinQ&#39;: set_GR_unif(params[&#39;bf&#39;])}
+#         else:
+#             print(&#39;Unrecognized model!&#39;)
+        
+#         intensity = 10**params[&#39;log_int&#39;]
+#         nstars = int(stats.poisson.rvs(intensity))
+        
+#         j_in, j_out = self.get_cmd(nstars, gr_dict)
+#         cmd_in = np.asarray([j_in[:,0] - j_in[:,1], j_in[:,1]]).T
+#         cmd_out = np.asarray([j_out[:,0] - j_out[:,1], j_out[:,1]]).T
+#         return cmd_in, cmd_out
+
+#     def sample_norm_cmd(self, params, model = &#39;spl&#39;):
+#         in_cmd, out_cmd = self.sample_cmd(params, model)
+#         if len(in_cmd) == 0 or len(out_cmd) == 0:
+#             return np.zeros((1000,2)), np.zeros((1000, 2))
+#         return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
+
+#     def kernel_representation(self, P, mapping):
+#         Phi_P = mapping(P).sum(axis=0)
+#         return Phi_P
+
+#     def approx_kernel_distance(self, P, Q, mapping):
+#         Phi_P = self.kernel_representation(P, mapping)
+#         Phi_Q = self.kernel_representation(Q, mapping)
+#         return np.sqrt(np.sum((Phi_P - Phi_Q)**2))
+
+#     def exact_kernel_distance(self, P, Q, gamma):
+#         P = P[np.max(np.isfinite(P),1)]
+#         Q = Q[np.max(np.isfinite(Q),1)]
+#         PP = np.exp(- gamma*np.sum((P[:, None, :] - P[None, :, :])**2, axis=-1)).sum()
+#         QQ = np.exp(- gamma*np.sum((Q[:, None, :] - Q[None, :, :])**2, axis=-1)).sum()
+#         PQ = np.exp(- gamma*np.sum((P[:, None, :] - Q[None, :, :])**2, axis=-1)).sum()
+#         return np.sqrt(PP + QQ - 2 * PQ)
+
+#     def cmd_sim(self, params, imf_type):
+#         in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
+#         return {&#39;output&#39;: self.kernel_representation(out_cmd, self.mapping)}
+#         #&#39;input&#39;: self.kernel_representation(in_cmd, self.mapping),
+#     def fit_cmd(self, observed_cmd, pop_size = 1000, max_n_pop = np.Inf, savename = &#39;starwave&#39;, min_acceptance_rate = 0.0001, gamma = 0.5, 
+#                     cores = 1, accept = &#39;uniform&#39;, alpha = 0.5, population_strategy = &#39;constant&#39;,
+#                     statistic = &#39;output&#39;):
+
+
+#         if cores == 1:
+#             pyabc_sampler = pyabc.sampler.SingleCoreSampler()
+#         elif cores &gt; 1:
+#             pyabc_sampler = pyabc.sampler.MulticoreEvalParallelSampler(n_procs = cores)
+#         else:
+#             print(&#39;invalid number of cores. defaulting to 1 core.&#39;)
+#             pyabc_sampler = pyabc.sampler.SingleCoreSampler()
+
+#         if population_strategy == &#39;constant&#39;:
+#             population_strategy = pyabc.populationstrategy.ConstantPopulationSize(pop_size)
+#         elif population_strategy == &#39;adapt&#39;:
+#             population_strategy = pyabc.populationstrategy.AdaptivePopulationSize(pop_size)
+
+
+#         scaled_observed_cmd = self.init_scaler(observed_cmd, gamma = gamma)
+
+#         obs = dict(output = self.kernel_representation(scaled_observed_cmd, self.mapping))
+
+#         dummy_cmd = np.zeros(observed_cmd.shape)
+        
+#         def simcmd(imf_type):
+#             return lambda params: self.cmd_sim(params, imf_type = imf_type)
+        
+#         simulator = [];
+#         prior = [];
+#         for idx,imf in enumerate(self.imf_type):
+#             simulator.append(simcmd(imf))
+#             prior.append(self.params[idx].to_pyabc())        
+
+
+#         if accept == &#39;uniform&#39;:
+#             acceptor = pyabc.acceptor.UniformAcceptor()
+#             eps = pyabc.epsilon.QuantileEpsilon(alpha = alpha)
+#             def distance(cmd1, cmd2):
+#                 return np.sqrt(np.sum((cmd1[statistic] - cmd2[statistic])**2))
+
+#         elif accept == &#39;stochastic&#39;:
+#             acceptor = pyabc.StochasticAcceptor()
+#             eps = pyabc.Temperature()
+#             base_params = make_params(self.imf_type[0]).get_values()
+#             sim_rep = np.asarray([self.cmd_sim(base_params, imf_type = self.imf_type[0])[&#39;output&#39;] for ii in range(25)])
+#             var = np.var(sim_rep, 0)
+#             distance = pyabc.IndependentNormalKernel(var = var, keys = [&#39;input&#39;])
+
+#         abc = pyabc.ABCSMC(simulator, 
+#                             prior,
+#                             distance, 
+#                             sampler = pyabc_sampler,
+#                             population_size = pop_size, 
+#                             eps = eps,
+#                             acceptor = acceptor)
+
+#         db_path = (&#34;sqlite:///&#34; + savename + &#34;.db&#34;)
+
+#         abc.new(db_path, obs);
+
+#         self.history = abc.run(min_acceptance_rate = min_acceptance_rate, max_nr_populations = max_n_pop)
+
+#         return self.history
+
+#     def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
+
+#         if imf_type == &#39;spl&#39;:
+#             simulator = self.cmd_sim_spl
+#         elif imf_type == &#39;bpl&#39;:
+#             simulator = self.cmd_sim_bpl
+#         elif imf_type == &#39;ln&#39;:
+#             simulator = self.cmd_sim_ln
+
+#         idxs = np.arange(len(df))
+#         post_samples = df.iloc[np.random.choice(idxs, size = n_samples, p = w)]
+
+#         self.cmd_scaler = MinMaxScaler()
+#         self.cmd_scaler.fit(observed_cmd)
+
+#         cmds = [self.cmd_scaler.inverse_transform(simulator(sample)[&#39;data&#39;]) for _,sample in post_samples.iterrows()]
+        
+#         if kde:
+#             return plot_lfs_kde(cmds)
+#         else:
+#             if color:
+#                 return plot_lfs(cmds, n_bins = n_bins, axis = 1), plot_lfs(cmds, n_bins = n_bins, axis = 0)
+#             return plot_lfs(cmds, n_bins = n_bins)
+
+#     #def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, n_bins = 35):
+
+
+#     def load_history(self, dbpath, id):
+#         def fakesim(p):
+#             return dict(null = p)
+
+#         dummy_abc = pyabc.ABCSMC(fakesim, None, None, sampler = pyabc.sampler.SingleCoreSampler())
+
+#         return dummy_abc.load(&#34;sqlite:///&#34; + dbpath, id)
+    
+# if __name__ == &#39;__main__&#39;:
+#     sw = StarWave()
+#     sw.params.pretty_print()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="starwave.starwave.StarWave"><code class="flex name class">
+<span>class <span class="ident">StarWave</span></span>
+<span>(</span><span>isodf, asdf, bands, imf_type, sfh_type='gaussian', sfh_grid=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>StarWave: fitting the stellar birth function of resolved stellar populations
+with approximate Bayesian computation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StarWave:
+    &#34;&#34;&#34;
+    StarWave: fitting the stellar birth function of resolved stellar populations 
+    with approximate Bayesian computation. 
+    
+    &#34;&#34;&#34;
+
+    def __init__(self, isodf, asdf, bands, imf_type, sfh_type = &#39;gaussian&#39;,
+        sfh_grid = None):
+
+        if sfh_type == &#39;grid&#39; and sfh_grid is None:
+            print(&#39;please pass an sfh_grid if you want to use grid-based SFH sampling!&#39;)
+            raise
+
+        self.imf_type = imf_type
+        self.sfh_type = sfh_type
+        self.params = make_params(imf_type, sfh_type)
+        self.make_prior(self.params) ## INITIALIZE FIXED PARAMS VECTOR
+        self.bands = bands
+        self.iso_int = intNN.intNN(isodf, self.bands)
+        self.asdf = asdf
+        self.return_inputmags = False
+
+        self.bands_in = [band + &#39;_in&#39; for band in bands]
+        self.bands_out = [band + &#39;_out&#39; for band in bands]
+
+        self.asdf_noise = self.asdf[self.bands_out].to_numpy() - self.asdf[self.bands_in].to_numpy()
+
+        self.kdtree = KDTree(asdf[self.bands_in])
+        self.trgb = -100
+        self.lim_logmass = np.log(0.1)
+        self.sfh_grid = sfh_grid
+
+        self.debug = False
+        
+        print(&#39;initalized starwave with %s bands, %s IMF, and default priors&#39; % (str(bands), imf_type))
+        print_prior_summary(self.params)
+
+    def init_scaler(self, observed_cmd, gamma = 0.5):
+        self.cmd_scaler = MinMaxScaler()
+        self.cmd_scaler.fit(observed_cmd);
+        scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
+        Phi_approx = Nystroem(kernel = &#39;rbf&#39;, n_components=50, gamma = gamma) 
+        Phi_approx.fit(scaled_observed_cmd)
+        self.mapping = Phi_approx.transform
+        print(&#39;scaler initialized and mapping defined!&#39;)
+        return scaled_observed_cmd
+
+    def get_cmd(self, nstars, gr_dict):
+
+        input_mags = np.empty((nstars, len(self.bands)))
+        input_mags[:] = np.nan
+
+        masses = gr_dict[&#39;logM&#39;].sample(nstars)
+        binqs = gr_dict[&#39;BinQ&#39;].sample(nstars)
+        sfhs = gr_dict[&#39;SFH&#39;].sample(nstars)
+        dms = gr_dict[&#39;DM&#39;].sample(nstars)
+
+
+        for ii in range(nstars):
+
+            mass = masses[ii]
+            binq = binqs[ii]
+            age, feh = sfhs[ii]
+            dm = dms[ii]
+
+            if mass &lt; self.lim_logmass or np.isnan(age) or np.isnan(feh):
+                continue
+
+            input_mag = get_absolute_mags(mass, age, feh, binq, self.iso_int, self.bands)
+
+            input_mags[ii, :] = input_mag + dm
+
+        nans = (np.isnan(input_mags) + (input_mags &lt; self.trgb)).any(axis = 1)
+
+        input_mags = input_mags[~nans]
+
+        if len(input_mags) == 0:
+            return input_mags, input_mags
+
+        idxs = self.kdtree.query(input_mags)[1][:, 0]
+
+        output_mags = input_mags + self.asdf_noise[idxs]
+
+        nans = np.isnan(output_mags).any(axis = 1)
+
+        output_mags = output_mags[~nans]
+
+
+        return input_mags, output_mags 
+    
+    def make_cmd(self, mags):
+        cmd = mags
+        for ii in range(mags.shape[1] - 1):
+            cmd[:, ii + 1] -= cmd[:, 0]
+
+        return cmd
+
+    def best_gamma(self, cmd, q = 0.68, fac = 1, NN = 5): # pass a scaled CMD
+        nbr = NearestNeighbors(n_neighbors = NN, algorithm = &#39;kd_tree&#39;, metric = &#39;minkowski&#39;, p = 2)
+        nbr.fit(cmd)
+        dst, idx = nbr.kneighbors(cmd, return_distance = True)
+        dst = dst[:, -1] # pick NNth distance
+
+        best_dist = np.quantile(dst, q)
+        gamma = 1 / (2 * (fac * best_dist)**2)
+
+        return gamma
+
+
+    def set_sfh_dist(self, pdict, sfh_type):
+
+        if sfh_type == &#39;gaussian&#39;:
+            cov = pdict[&#39;age_feh_corr&#39;] * pdict[&#39;sig_age&#39;] * pdict[&#39;sig_feh&#39;]
+            covmat = np.array([[pdict[&#39;sig_age&#39;], cov], [cov, pdict[&#39;sig_feh&#39;]]])
+
+
+            if not isPD(covmat):
+                covmat = nearestPD(covmat)
+                print(&#39;found nearest SFH covmat...&#39;)
+
+            means = np.array([pdict[&#39;age&#39;], pdict[&#39;feh&#39;]])
+
+            return SW_SFH(stats.multivariate_normal(mean = means, cov = covmat, allow_singular = True))
+
+        elif sfh_type == &#39;grid&#39;:
+
+            if self.sfh_grid is None:
+                print(&#39;must pass an sfh_grid to use grid-based sampling!&#39;)
+                raise
+
+            else:
+                return GridSFH(self.sfh_grid)
+
+
+    def make_prior(self, parameters):
+    
+        priors = [];
+        self.fixed_params = {};
+        self.param_mapper = {};
+        idx = 0
+
+        for ii,(name, param) in enumerate(parameters.dict.items()):
+            
+            if param.fixed:
+                self.fixed_params[name] = param.value
+                continue
+            
+            
+            lower = param.bounds[0]
+            upper = param.bounds[1]
+            
+            if param.distribution == &#39;uniform&#39;:
+                distribution = torch.distributions.Uniform(lower*torch.ones(1), upper*torch.ones(1))
+                priors.append(distribution)
+                
+            elif param.distribution == &#39;norm&#39;:
+                try:
+                    mean = param.dist_kwargs[&#39;mean&#39;]
+                    sigma = param.dist_kwargs[&#39;sigma&#39;]
+                except:
+                    raise ValueError(&#39;please pass valid distribution arguments!&#39;)
+                distribution = torch.distributions.Normal(torch.tensor(mean), torch.tensor(sigma))
+                priors.append(distribution)
+                
+            else:
+                raise ValueError(&#39;invalid distribution name&#39;)
+
+            self.param_mapper[name] = idx
+            idx += 1 # IDX maps the vector of sampled parameters, leaving apart the fixed ones. 
+    
+        return priors
+
+    def sample_cmd(self, params, model):
+
+        is_pdict = False
+
+        if isinstance(params, torch.FloatTensor):
+            params = params.detach().cpu().numpy()
+        elif isinstance(params, (list, np.ndarray)):
+            pass
+        elif isinstance(params, dict):
+            pdict = params
+            is_pdict = True
+
+
+        self.make_prior(self.params) # Re-initialize priors, check fixed parameters
+
+        pdict = {};
+        for name in self.params.keys():
+            if name in self.fixed_params.keys():
+                pdict[name] = self.fixed_params[name]
+            else:
+                if is_pdict:
+                    pdict[name] = params[name] # if params are dictionary  
+                else:
+                    pdict[name] = params[self.param_mapper[name]] # if params are array or tensor
+
+        # if self.debug:
+        #     print(&#39;param dictionary in sample_cmd:&#39; + str(pdict))
+
+        if model == &#39;spl&#39;:
+            gr_dict = {&#39;logM&#39;:set_GR_spl(pdict[&#39;slope&#39;])}
+        elif model == &#39;bpl&#39;:
+            gr_dict = {&#39;logM&#39;:set_GR_bpl(pdict[&#39;alow&#39;], pdict[&#39;ahigh&#39;], pdict[&#39;bm&#39;])}
+        elif model == &#39;ln&#39;:
+            gr_dict = {&#39;logM&#39;:set_GR_ln10full(pdict[&#39;mean&#39;], pdict[&#39;sigma&#39;], pdict[&#39;bm&#39;], pdict[&#39;slope&#39;])}
+        else:
+            print(&#39;Unrecognized model!&#39;)
+
+        gr_dict[&#39;BinQ&#39;] = set_GR_unif(pdict[&#39;bf&#39;])
+        gr_dict[&#39;SFH&#39;] = self.set_sfh_dist(pdict, self.sfh_type)
+        gr_dict[&#39;DM&#39;] = SWDist(stats.norm(loc = pdict[&#39;dm&#39;], scale = pdict[&#39;sig_dm&#39;]))
+
+        intensity = 10**pdict[&#39;log_int&#39;]
+        nstars = int(stats.poisson.rvs(intensity))
+        
+        mags_in, mags_out = self.get_cmd(nstars, gr_dict)
+        cmd_in = self.make_cmd(mags_in)
+        cmd_out = self.make_cmd(mags_out)
+        return cmd_in, cmd_out
+
+    def sample_norm_cmd(self, params, model):
+        in_cmd, out_cmd = self.sample_cmd(params, model)
+        if len(in_cmd) == 0 or len(out_cmd) == 0:
+            print(&#39;empty cmd!&#39;)
+            return self.dummy_cmd, self.dummy_cmd
+        return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
+
+    def kernel_representation(self, P, mapping):
+        Phi_P = mapping(P).sum(axis=0)
+        return Phi_P
+
+    def cmd_sim(self, params, imf_type):
+        in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
+        if self.return_inputmags:
+            return self.kernel_representation(in_cmd, self.mapping)
+        else:
+            return self.kernel_representation(out_cmd, self.mapping)
+
+    def fit_cmd(self, observed_cmd, n_rounds = 5, n_sims = 100, savename = &#39;starwave&#39;, min_acceptance_rate = 0.0001, gamma = None, 
+                    cores = 1, alpha = 0.5,
+                    statistic = &#39;output&#39;,
+                    gamma_kw = {}):
+
+
+        if cores == 1:
+            pass # IMPLEMENT SBI MULTICORE
+
+        scaled_observed_cmd = self.init_scaler(observed_cmd, gamma = gamma)
+        obs = torch.tensor(self.kernel_representation(scaled_observed_cmd, self.mapping))
+        self.obs = obs
+
+        if gamma is None:
+            print(&#39;finding optimal kernel width...&#39;)
+            gamma = self.best_gamma(scaled_observed_cmd, **gamma_kw)
+            print(&#39;setting gamma = %i&#39; % gamma)
+
+        self.dummy_cmd = np.zeros(observed_cmd.shape)
+        
+        def simcmd(imf_type):
+            return lambda params: self.cmd_sim(params, imf_type = imf_type)
+
+        Nobs = len(scaled_observed_cmd)
+
+        #self.params[&#39;log_int&#39;].set(value = np.log10(Nobs), bounds = [np.log10(Nobs/2) , np.log10(Nobs*10)])
+
+        print_prior_summary(self.params)
+        
+        prior = user_input_checks.MultipleIndependent(self.make_prior(self.params))
+        simulator = simcmd(self.imf_type)
+
+        self.simulator,self.prior = prepare_for_sbi(simulator,prior)
+
+        inference = SNPE(prior = self.prior)
+
+        self.posteriors = [];
+        proposal = self.prior
+
+        for _ in range(n_rounds):
+            print(&#39;Starting round %i of neural inference...&#39; % (_+1))
+            theta, x = simulate_for_sbi(self.simulator, proposal, num_simulations=n_sims, num_workers = cores)
+            density_estimator = inference.append_simulations(theta, x, proposal=proposal).train()
+            posterior = inference.build_posterior(density_estimator)
+            self.posteriors.append(posterior)
+            proposal = posterior.set_default_x(obs)
+
+        return self.posteriors[-1]
+
+    # def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
+
+    #     if imf_type == &#39;spl&#39;:
+    #         simulator = self.cmd_sim_spl
+    #     elif imf_type == &#39;bpl&#39;:
+    #         simulator = self.cmd_sim_bpl
+    #     elif imf_type == &#39;ln&#39;:
+    #         simulator = self.cmd_sim_ln
+
+    #     idxs = np.arange(len(df))
+    #     post_samples = df.iloc[np.random.choice(idxs, size = n_samples, p = w)]
+
+    #     self.cmd_scaler = MinMaxScaler()
+    #     self.cmd_scaler.fit(observed_cmd)
+
+    #     cmds = [self.cmd_scaler.inverse_transform(simulator(sample)[&#39;data&#39;]) for _,sample in post_samples.iterrows()]
+        
+    #     if kde:
+    #         return plot_lfs_kde(cmds)
+    #     else:
+    #         if color:
+    #             return plot_lfs(cmds, n_bins = n_bins, axis = 1), plot_lfs(cmds, n_bins = n_bins, axis = 0)
+    #         return plot_lfs(cmds, n_bins = n_bins)
+
+    #def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, n_bins = 35):
+
+
+    def load_history(self, dbpath, id):
+        def fakesim(p):
+            return dict(null = p)
+
+        dummy_abc = pyabc.ABCSMC(fakesim, None, None, sampler = pyabc.sampler.SingleCoreSampler())
+
+        return dummy_abc.load(&#34;sqlite:///&#34; + dbpath, id)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="starwave.starwave.StarWave.best_gamma"><code class="name flex">
+<span>def <span class="ident">best_gamma</span></span>(<span>self, cmd, q=0.68, fac=1, NN=5)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def best_gamma(self, cmd, q = 0.68, fac = 1, NN = 5): # pass a scaled CMD
+    nbr = NearestNeighbors(n_neighbors = NN, algorithm = &#39;kd_tree&#39;, metric = &#39;minkowski&#39;, p = 2)
+    nbr.fit(cmd)
+    dst, idx = nbr.kneighbors(cmd, return_distance = True)
+    dst = dst[:, -1] # pick NNth distance
+
+    best_dist = np.quantile(dst, q)
+    gamma = 1 / (2 * (fac * best_dist)**2)
+
+    return gamma</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.cmd_sim"><code class="name flex">
+<span>def <span class="ident">cmd_sim</span></span>(<span>self, params, imf_type)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cmd_sim(self, params, imf_type):
+    in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
+    if self.return_inputmags:
+        return self.kernel_representation(in_cmd, self.mapping)
+    else:
+        return self.kernel_representation(out_cmd, self.mapping)</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.fit_cmd"><code class="name flex">
+<span>def <span class="ident">fit_cmd</span></span>(<span>self, observed_cmd, n_rounds=5, n_sims=100, savename='starwave', min_acceptance_rate=0.0001, gamma=None, cores=1, alpha=0.5, statistic='output', gamma_kw={})</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fit_cmd(self, observed_cmd, n_rounds = 5, n_sims = 100, savename = &#39;starwave&#39;, min_acceptance_rate = 0.0001, gamma = None, 
+                cores = 1, alpha = 0.5,
+                statistic = &#39;output&#39;,
+                gamma_kw = {}):
+
+
+    if cores == 1:
+        pass # IMPLEMENT SBI MULTICORE
+
+    scaled_observed_cmd = self.init_scaler(observed_cmd, gamma = gamma)
+    obs = torch.tensor(self.kernel_representation(scaled_observed_cmd, self.mapping))
+    self.obs = obs
+
+    if gamma is None:
+        print(&#39;finding optimal kernel width...&#39;)
+        gamma = self.best_gamma(scaled_observed_cmd, **gamma_kw)
+        print(&#39;setting gamma = %i&#39; % gamma)
+
+    self.dummy_cmd = np.zeros(observed_cmd.shape)
+    
+    def simcmd(imf_type):
+        return lambda params: self.cmd_sim(params, imf_type = imf_type)
+
+    Nobs = len(scaled_observed_cmd)
+
+    #self.params[&#39;log_int&#39;].set(value = np.log10(Nobs), bounds = [np.log10(Nobs/2) , np.log10(Nobs*10)])
+
+    print_prior_summary(self.params)
+    
+    prior = user_input_checks.MultipleIndependent(self.make_prior(self.params))
+    simulator = simcmd(self.imf_type)
+
+    self.simulator,self.prior = prepare_for_sbi(simulator,prior)
+
+    inference = SNPE(prior = self.prior)
+
+    self.posteriors = [];
+    proposal = self.prior
+
+    for _ in range(n_rounds):
+        print(&#39;Starting round %i of neural inference...&#39; % (_+1))
+        theta, x = simulate_for_sbi(self.simulator, proposal, num_simulations=n_sims, num_workers = cores)
+        density_estimator = inference.append_simulations(theta, x, proposal=proposal).train()
+        posterior = inference.build_posterior(density_estimator)
+        self.posteriors.append(posterior)
+        proposal = posterior.set_default_x(obs)
+
+    return self.posteriors[-1]</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.get_cmd"><code class="name flex">
+<span>def <span class="ident">get_cmd</span></span>(<span>self, nstars, gr_dict)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_cmd(self, nstars, gr_dict):
+
+    input_mags = np.empty((nstars, len(self.bands)))
+    input_mags[:] = np.nan
+
+    masses = gr_dict[&#39;logM&#39;].sample(nstars)
+    binqs = gr_dict[&#39;BinQ&#39;].sample(nstars)
+    sfhs = gr_dict[&#39;SFH&#39;].sample(nstars)
+    dms = gr_dict[&#39;DM&#39;].sample(nstars)
+
+
+    for ii in range(nstars):
+
+        mass = masses[ii]
+        binq = binqs[ii]
+        age, feh = sfhs[ii]
+        dm = dms[ii]
+
+        if mass &lt; self.lim_logmass or np.isnan(age) or np.isnan(feh):
+            continue
+
+        input_mag = get_absolute_mags(mass, age, feh, binq, self.iso_int, self.bands)
+
+        input_mags[ii, :] = input_mag + dm
+
+    nans = (np.isnan(input_mags) + (input_mags &lt; self.trgb)).any(axis = 1)
+
+    input_mags = input_mags[~nans]
+
+    if len(input_mags) == 0:
+        return input_mags, input_mags
+
+    idxs = self.kdtree.query(input_mags)[1][:, 0]
+
+    output_mags = input_mags + self.asdf_noise[idxs]
+
+    nans = np.isnan(output_mags).any(axis = 1)
+
+    output_mags = output_mags[~nans]
+
+
+    return input_mags, output_mags </code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.init_scaler"><code class="name flex">
+<span>def <span class="ident">init_scaler</span></span>(<span>self, observed_cmd, gamma=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_scaler(self, observed_cmd, gamma = 0.5):
+    self.cmd_scaler = MinMaxScaler()
+    self.cmd_scaler.fit(observed_cmd);
+    scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
+    Phi_approx = Nystroem(kernel = &#39;rbf&#39;, n_components=50, gamma = gamma) 
+    Phi_approx.fit(scaled_observed_cmd)
+    self.mapping = Phi_approx.transform
+    print(&#39;scaler initialized and mapping defined!&#39;)
+    return scaled_observed_cmd</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.kernel_representation"><code class="name flex">
+<span>def <span class="ident">kernel_representation</span></span>(<span>self, P, mapping)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kernel_representation(self, P, mapping):
+    Phi_P = mapping(P).sum(axis=0)
+    return Phi_P</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.load_history"><code class="name flex">
+<span>def <span class="ident">load_history</span></span>(<span>self, dbpath, id)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_history(self, dbpath, id):
+    def fakesim(p):
+        return dict(null = p)
+
+    dummy_abc = pyabc.ABCSMC(fakesim, None, None, sampler = pyabc.sampler.SingleCoreSampler())
+
+    return dummy_abc.load(&#34;sqlite:///&#34; + dbpath, id)</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.make_cmd"><code class="name flex">
+<span>def <span class="ident">make_cmd</span></span>(<span>self, mags)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_cmd(self, mags):
+    cmd = mags
+    for ii in range(mags.shape[1] - 1):
+        cmd[:, ii + 1] -= cmd[:, 0]
+
+    return cmd</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.make_prior"><code class="name flex">
+<span>def <span class="ident">make_prior</span></span>(<span>self, parameters)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_prior(self, parameters):
+
+    priors = [];
+    self.fixed_params = {};
+    self.param_mapper = {};
+    idx = 0
+
+    for ii,(name, param) in enumerate(parameters.dict.items()):
+        
+        if param.fixed:
+            self.fixed_params[name] = param.value
+            continue
+        
+        
+        lower = param.bounds[0]
+        upper = param.bounds[1]
+        
+        if param.distribution == &#39;uniform&#39;:
+            distribution = torch.distributions.Uniform(lower*torch.ones(1), upper*torch.ones(1))
+            priors.append(distribution)
+            
+        elif param.distribution == &#39;norm&#39;:
+            try:
+                mean = param.dist_kwargs[&#39;mean&#39;]
+                sigma = param.dist_kwargs[&#39;sigma&#39;]
+            except:
+                raise ValueError(&#39;please pass valid distribution arguments!&#39;)
+            distribution = torch.distributions.Normal(torch.tensor(mean), torch.tensor(sigma))
+            priors.append(distribution)
+            
+        else:
+            raise ValueError(&#39;invalid distribution name&#39;)
+
+        self.param_mapper[name] = idx
+        idx += 1 # IDX maps the vector of sampled parameters, leaving apart the fixed ones. 
+
+    return priors</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.sample_cmd"><code class="name flex">
+<span>def <span class="ident">sample_cmd</span></span>(<span>self, params, model)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_cmd(self, params, model):
+
+    is_pdict = False
+
+    if isinstance(params, torch.FloatTensor):
+        params = params.detach().cpu().numpy()
+    elif isinstance(params, (list, np.ndarray)):
+        pass
+    elif isinstance(params, dict):
+        pdict = params
+        is_pdict = True
+
+
+    self.make_prior(self.params) # Re-initialize priors, check fixed parameters
+
+    pdict = {};
+    for name in self.params.keys():
+        if name in self.fixed_params.keys():
+            pdict[name] = self.fixed_params[name]
+        else:
+            if is_pdict:
+                pdict[name] = params[name] # if params are dictionary  
+            else:
+                pdict[name] = params[self.param_mapper[name]] # if params are array or tensor
+
+    # if self.debug:
+    #     print(&#39;param dictionary in sample_cmd:&#39; + str(pdict))
+
+    if model == &#39;spl&#39;:
+        gr_dict = {&#39;logM&#39;:set_GR_spl(pdict[&#39;slope&#39;])}
+    elif model == &#39;bpl&#39;:
+        gr_dict = {&#39;logM&#39;:set_GR_bpl(pdict[&#39;alow&#39;], pdict[&#39;ahigh&#39;], pdict[&#39;bm&#39;])}
+    elif model == &#39;ln&#39;:
+        gr_dict = {&#39;logM&#39;:set_GR_ln10full(pdict[&#39;mean&#39;], pdict[&#39;sigma&#39;], pdict[&#39;bm&#39;], pdict[&#39;slope&#39;])}
+    else:
+        print(&#39;Unrecognized model!&#39;)
+
+    gr_dict[&#39;BinQ&#39;] = set_GR_unif(pdict[&#39;bf&#39;])
+    gr_dict[&#39;SFH&#39;] = self.set_sfh_dist(pdict, self.sfh_type)
+    gr_dict[&#39;DM&#39;] = SWDist(stats.norm(loc = pdict[&#39;dm&#39;], scale = pdict[&#39;sig_dm&#39;]))
+
+    intensity = 10**pdict[&#39;log_int&#39;]
+    nstars = int(stats.poisson.rvs(intensity))
+    
+    mags_in, mags_out = self.get_cmd(nstars, gr_dict)
+    cmd_in = self.make_cmd(mags_in)
+    cmd_out = self.make_cmd(mags_out)
+    return cmd_in, cmd_out</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.sample_norm_cmd"><code class="name flex">
+<span>def <span class="ident">sample_norm_cmd</span></span>(<span>self, params, model)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_norm_cmd(self, params, model):
+    in_cmd, out_cmd = self.sample_cmd(params, model)
+    if len(in_cmd) == 0 or len(out_cmd) == 0:
+        print(&#39;empty cmd!&#39;)
+        return self.dummy_cmd, self.dummy_cmd
+    return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)</code></pre>
+</details>
+</dd>
+<dt id="starwave.starwave.StarWave.set_sfh_dist"><code class="name flex">
+<span>def <span class="ident">set_sfh_dist</span></span>(<span>self, pdict, sfh_type)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_sfh_dist(self, pdict, sfh_type):
+
+    if sfh_type == &#39;gaussian&#39;:
+        cov = pdict[&#39;age_feh_corr&#39;] * pdict[&#39;sig_age&#39;] * pdict[&#39;sig_feh&#39;]
+        covmat = np.array([[pdict[&#39;sig_age&#39;], cov], [cov, pdict[&#39;sig_feh&#39;]]])
+
+
+        if not isPD(covmat):
+            covmat = nearestPD(covmat)
+            print(&#39;found nearest SFH covmat...&#39;)
+
+        means = np.array([pdict[&#39;age&#39;], pdict[&#39;feh&#39;]])
+
+        return SW_SFH(stats.multivariate_normal(mean = means, cov = covmat, allow_singular = True))
+
+    elif sfh_type == &#39;grid&#39;:
+
+        if self.sfh_grid is None:
+            print(&#39;must pass an sfh_grid to use grid-based sampling!&#39;)
+            raise
+
+        else:
+            return GridSFH(self.sfh_grid)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="starwave" href="index.html">starwave</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="starwave.starwave.StarWave" href="#starwave.starwave.StarWave">StarWave</a></code></h4>
+<ul class="">
+<li><code><a title="starwave.starwave.StarWave.best_gamma" href="#starwave.starwave.StarWave.best_gamma">best_gamma</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.cmd_sim" href="#starwave.starwave.StarWave.cmd_sim">cmd_sim</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.fit_cmd" href="#starwave.starwave.StarWave.fit_cmd">fit_cmd</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.get_cmd" href="#starwave.starwave.StarWave.get_cmd">get_cmd</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.init_scaler" href="#starwave.starwave.StarWave.init_scaler">init_scaler</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.kernel_representation" href="#starwave.starwave.StarWave.kernel_representation">kernel_representation</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.load_history" href="#starwave.starwave.StarWave.load_history">load_history</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.make_cmd" href="#starwave.starwave.StarWave.make_cmd">make_cmd</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.make_prior" href="#starwave.starwave.StarWave.make_prior">make_prior</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.sample_cmd" href="#starwave.starwave.StarWave.sample_cmd">sample_cmd</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.sample_norm_cmd" href="#starwave.starwave.StarWave.sample_norm_cmd">sample_norm_cmd</a></code></li>
+<li><code><a title="starwave.starwave.StarWave.set_sfh_dist" href="#starwave.starwave.StarWave.set_sfh_dist">set_sfh_dist</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
