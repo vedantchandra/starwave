@@ -9,20 +9,20 @@ sys.path.append(dir_path)
 
 from generalrandom import GeneralRandom
 
-l_logm = np.log(0.05)
-u_logm = np.log(8)
+l_logm = np.log(0.05) # lower limit on log stellar mass
+u_logm = np.log(8) # upper limit on log stellar mass
 
-l_age = 8
-u_age = 10.1249
+l_age = 8  # lower limit on log stellar age in Gyr
+u_age = 10.1249 # upper limit on log stellar age in Gyr
 
-l_feh = -4
-u_feh = 1
+l_feh = -4 # lower limit on [Fe/H]
+u_feh = 1 # upper limit on [Fe/H]
 
 # def get_near_psd(A):
 #     C = (A + A.T)/2
 #     eigval, eigvec = np.linalg.eig(C)
 #     eigval[eigval < 0] = 1e-5
-
+s
 #     return eigvec.dot(np.diag(eigval)).dot(eigvec.T)
 
 from numpy import linalg as la
@@ -37,6 +37,8 @@ def nearestPD(A):
 
     [2] N.J. Higham, "Computing a nearest symmetric positive semidefinite
     matrix" (1988): https://doi.org/10.1016/0024-3795(88)90223-6
+    :param A: input array
+    :type A: array
     """
 
     B = (A + A.T) / 2
@@ -71,7 +73,10 @@ def nearestPD(A):
     return A3
 
 def isPD(B):
-    """Returns true when input is positive-definite, via Cholesky"""
+    """Returns true when input is positive-definite, via Cholesky
+    :param B: input array
+    :type B: bytearray
+    """
     try:
         _ = la.cholesky(B)
         return True
@@ -81,11 +86,9 @@ def isPD(B):
 
 
 class SW_SFH:
-	'''
-
-	wraps around scipy dist and gives it a sample option
-
-	'''
+    '''
+    wraps around a scipy distribution to give it a sample() method
+    '''
 
 	def __init__(self, scipy_dist):
 		self.scipy_dist = scipy_dist
@@ -101,17 +104,19 @@ class SW_SFH:
 
 class GridSFH:
     '''
-    Loads and samples a grid-based SFH
+    loads and samples a grid-based SFH from a dictionary of ages, metallicities, and weights
     '''
     
     def __init__(self, sfh_grid):
         '''
-        Assumde sfh_grid is a dictionary with the following keys:
-        'mets' : array of M [Fe/H] grid points 
+        Assumes sfh_grid is a dictionary with the following keys:
+        'mets' : array of M [Fe/H] grid points
         'ages' : array of A age (Gyr) grid points
         'probabilities' : M x A matrix with probability (or some weight) of each SFH bin
+        :param sfh_grid: SFH grid
+        :type sfh_grid: dict
         '''
-        
+
         self.sfh_grid = sfh_grid
         mets, ages, probs = sfh_grid['mets'], sfh_grid['ages'], sfh_grid['probabilities']
         MM, AA = np.meshgrid(mets[:-1], ages[:-1])
@@ -134,13 +139,30 @@ class GridSFH:
         return np.vstack((sampled_a, sampled_m)).T
 
 def set_GR_spl(slope):
+    '''
+    defines a GeneralRandom object for a single power-law (Salpeter) IMF
+    :param slope: slope of the IMF
+    :type slope: float
+    :return: GR_spl
+    :rtype: GeneralRandom object
+    '''
 		x = np.linspace(l_logm,u_logm,1000)
 		y = np.exp(x*(slope+1))
 		GR_spl = GeneralRandom(x,y,1000)
 		return GR_spl
 
-def set_GR_bpl(alow,ahigh,bm,**kwargs):
-
+def set_GR_bpl(alow,ahigh,bm):
+    '''
+    defines a GeneralRandom object for a double power-law (Kroupa) IMF
+    :param alow: low-mass IMF slope
+    :type alow: float
+    :param ahigh: high-mass IMF slope
+    :type ahigh: float
+    :param bm: break mass
+    :type bm: float
+    :return: GR_bpl
+    :rtype: GeneralRandom object
+    '''
 	x = np.linspace(l_logm,u_logm,1000)
 	lkm = np.log(bm)*(alow-ahigh)
 	y = np.where(x<np.log(bm), x*(alow+1), +lkm+x*(ahigh+1))
@@ -149,6 +171,19 @@ def set_GR_bpl(alow,ahigh,bm,**kwargs):
 	return GR_bpl
 
 def set_GR_ln10full(mc,sm,mt,sl):
+    '''
+    defines a GeneralRandom object for a log-normal (Chabrier) IMF
+    :param mc: mean mass
+    :type mc: float
+    :param sm: sigma mass
+    :type sm: float
+    :param mt: transition mass to power-law
+    :type mt: float
+    :param sl: power-law slope after transition mass
+    :type sl: float
+    :return: GR_ln10full
+    :rtype: GeneralRandom object
+    '''
 
 	x = np.linspace(l_logm,u_logm,1000)
 	BMtr = x>=np.log(mt)

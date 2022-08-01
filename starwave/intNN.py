@@ -31,6 +31,8 @@ class intNN:
         self.iso_mrng = [[0 for x in range(len(self.isomets))] for y in range(len(self.isoages))]
         self.photbands = photbands
 
+        self.has_warned = False
+
         print('interpolating %i ages and %i metallicities...' % (len(self.isoages), len(self.isomets)))
 
         for aa, age in tqdm(enumerate(self.isoages)):
@@ -47,7 +49,12 @@ class intNN:
     def __call__(self,mss,logage,met):
 
         if logage < self.l_logage or logage > self.u_logage:
-            print('intNN warning: age out of bounds')
+
+            if not self.has_warned:
+                print('intNN warning: age out of bounds')
+                self.has_warned = True
+            else:
+                pass
 
         age = 10**logage * 1e-9
         nage_idx = findNN_arr.find_nearest_idx(self.isoages,age)
