@@ -32,12 +32,38 @@ set_loky_pickler("dill")
 class StarWave:
     """
     StarWave: fitting the stellar birth function of resolved stellar populations 
-    with approximate Bayesian computation. 
+    with approximate Bayesian computation.
+    This is the main class that performs the CMD fitting. The class is instantiated with
+    an isochrone dataframe and artifical star database, as well as the type of IMF and
+    SFH you want to fit/sample from.
     
     """
 
     def __init__(self, isodf, asdf, bands, imf_type, sfh_type = 'gaussian',
         sfh_grid = None):
+        """
+        Initializes the StarWave object
+        Parameters
+        ----------
+        isodf : pandas DataFrame
+            Multi-indexed dataframe containing isochrone data for the required photometric bands.
+            Should be indexed in Age, [Fe/H], and mass. # add more details
+        asdf : pandas DataFrame
+            Artifical star database containing input and output magnitudes for artifically injected
+            stars, in all the required photometric bands
+        bands : list
+            list of strings containing the names of the photometric bands used. These names must be consistent
+            in the isodf and the asdf
+        imf_type : str
+            whether to fit an 'spl', 'bpl', or 'ln' IMF parameterization
+        sfh_type :  str
+            whether to fit a single-burst Gaussian SFH ('gaussian') or sample from a grid-based SFH ('grid')
+        sfh_grid : dict
+            if sfh_type is 'grid', then this dictionary contains the SFH with the following keys:
+            'mets' : array of M [Fe/H] grid points
+		    'ages' : array of A age (Gyr) grid points
+		    'probabilities' : M x A matrix with probability (or some weight) of each SFH bin
+        """
 
         if sfh_type == 'grid' and sfh_grid is None:
             print('please pass an sfh_grid if you want to use grid-based SFH sampling!')
@@ -68,6 +94,18 @@ class StarWave:
         print_prior_summary(self.params)
 
     def init_scaler(self, observed_cmd, gamma = 0.5):
+        """
+        initialize min-max scaling of CMD, along with the Nystroem kernel
+        Parameters
+        ----------
+        observed_cmd : array
+        gamma : float
+
+        Returns
+        -------
+        array
+            unit-scaled CMD
+        """
         self.cmd_scaler = MinMaxScaler()
         self.cmd_scaler.fit(observed_cmd);
         scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
@@ -78,6 +116,19 @@ class StarWave:
         return scaled_observed_cmd
 
     def get_cmd(self, nstars, gr_dict):
+        """
+        get a sampled CMD for a set of input parameters and total number of stars
+        Parameters
+        ----------
+        nstars : int
+            total number of sampled stars
+        gr_dict : dict
+            dictionary containing the IMF parameter distributions as GeneralRandom objects
+
+        Returns
+        -------
+
+        """
 
         input_mags = np.empty((nstars, len(self.bands)))
         input_mags[:] = np.nan
@@ -121,13 +172,41 @@ class StarWave:
         return input_mags, output_mags 
     
     def make_cmd(self, mags):
+        """
+        convert magnitudes to a cmd
+        Parameters
+        ----------
+        mags : array
+
+        Returns
+        -------
+        array
+        """
         cmd = mags
         for ii in range(mags.shape[1] - 1):
             cmd[:, ii + 1] -= cmd[:, 0]
 
         return cmd
 
-    def best_gamma(self, cmd, q = 0.68, fac = 1, NN = 5): # pass a scaled CMD
+    def best_gamma(self, cmd, q = 0.68, fac = 1, NN = 5):
+        """
+        find best gamma value using Mario's heuristic
+        Parameters
+        ----------
+        cmd : array
+            input CMD
+        q : float
+            quantile to use in the heuristic
+        fac : float
+            fudge factor to scale up distances
+        NN : int
+            number of nearest neighbours to use
+
+        Returns
+        -------
+        float
+            best gamma value
+        """
         nbr = NearestNeighbors(n_neighbors = NN, algorithm = 'kd_tree', metric = 'minkowski', p = 2)
         nbr.fit(cmd)
         dst, idx = nbr.kneighbors(cmd, return_distance = True)
@@ -140,6 +219,20 @@ class StarWave:
 
 
     def set_sfh_dist(self, pdict, sfh_type):
+        """
+        initialize and return the SFH distribution so that it can be sampled
+        Parameters
+        ----------
+        pdict : dict
+            parameter dictionary containing SFH parameters
+        sfh_type : str
+            type of SFH being fitted/sampled from ('gaussian' or 'grid')
+
+        Returns
+        -------
+        object
+            A starwave SFH object that can be sampled from
+        """
 
         if sfh_type == 'gaussian':
             cov = pdict['age_feh_corr'] * pdict['sig_age'] * pdict['sig_feh']
@@ -165,6 +258,18 @@ class StarWave:
 
 
     def make_prior(self, parameters):
+        """
+        initialize priors for all sampled parameters
+        Parameters
+        ----------
+        parameters : object
+            starwave parameters object
+
+        Returns
+        -------
+        list
+            list of prior distributions in torch format
+        """
     
         priors = [];
         self.fixed_params = {};
@@ -203,6 +308,19 @@ class StarWave:
         return priors
 
     def sample_cmd(self, params, model):
+        """
+        wrapper function to sample a CMD for a given set of starwave parameters
+        Parameters
+        ----------
+        params : SWParameters object
+        model : str
+            'spl', 'bpl', or 'ln' IMF model
+
+        Returns
+        -------
+        list
+            list of two arrays, one for the noiseless CMD and one for the noisy CMD
+        """
 
         is_pdict = False
 
@@ -252,6 +370,19 @@ class StarWave:
         return cmd_in, cmd_out
 
     def sample_norm_cmd(self, params, model):
+        """
+        wrapper function to sample unit-normalized CMD
+        Parameters
+        ----------
+        params : SWParameters object
+        model : str
+            'spl', 'bpl', or 'ln' IMF model
+
+        Returns
+        -------
+        list
+            list of two arrays, one for the noiseless CMD and one for the noisy CMD, unit-scaled
+        """
         in_cmd, out_cmd = self.sample_cmd(params, model)
         if len(in_cmd) == 0 or len(out_cmd) == 0:
             print('empty cmd!')
@@ -259,20 +390,72 @@ class StarWave:
         return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
 
     def kernel_representation(self, P, mapping):
+        """
+        project a given array (CMD) onto the kernal space
+        Parameters
+        ----------
+        P : array
+            CMD to be projected
+        mapping : array
+            kernel mapping from Nystroem
+
+        Returns
+        -------
+        array
+            projected representation of CMD
+        """
         Phi_P = mapping(P).sum(axis=0)
         return Phi_P
 
     def cmd_sim(self, params, imf_type):
+        """
+        wrapper function to simulate kernel-represented CMD given parameters
+        Parameters
+        ----------
+        params : SWParameters object
+        imf_type : str
+            'spl', 'bpl', or 'ln' IMF model
+
+        Returns
+        -------
+        array
+            sampled CMD in kernel representation form
+        """
         in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
         if self.return_inputmags:
             return self.kernel_representation(in_cmd, self.mapping)
         else:
             return self.kernel_representation(out_cmd, self.mapping)
 
-    def fit_cmd(self, observed_cmd, n_rounds = 5, n_sims = 100, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = None, 
-                    cores = 1, alpha = 0.5,
-                    statistic = 'output',
-                    gamma_kw = {}):
+    def fit_cmd(self, observed_cmd,
+                n_rounds = 5,
+                n_sims = 100,
+                savename = 'starwave',
+                min_acceptance_rate = 0.0001,
+                gamma = None,
+                cores = 1, alpha = 0.5,
+                statistic = 'output',
+                gamma_kw = {}):
+
+        """
+        main function to fit an observed CMD using an instatiated StarWave object
+        Parameters
+        ----------
+        observed_cmd :
+        n_rounds :
+        n_sims :
+        savename :
+        min_acceptance_rate :
+        gamma :
+        cores :
+        alpha :
+        statistic :
+        gamma_kw :
+
+        Returns
+        -------
+
+        """
 
 
         if cores == 1:
@@ -317,275 +500,7 @@ class StarWave:
             proposal = posterior.set_default_x(obs)
 
         return self.posteriors[-1]
-
-    # def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
-
-    #     if imf_type == 'spl':
-    #         simulator = self.cmd_sim_spl
-    #     elif imf_type == 'bpl':
-    #         simulator = self.cmd_sim_bpl
-    #     elif imf_type == 'ln':
-    #         simulator = self.cmd_sim_ln
-
-    #     idxs = np.arange(len(df))
-    #     post_samples = df.iloc[np.random.choice(idxs, size = n_samples, p = w)]
-
-    #     self.cmd_scaler = MinMaxScaler()
-    #     self.cmd_scaler.fit(observed_cmd)
-
-    #     cmds = [self.cmd_scaler.inverse_transform(simulator(sample)['data']) for _,sample in post_samples.iterrows()]
-        
-    #     if kde:
-    #         return plot_lfs_kde(cmds)
-    #     else:
-    #         if color:
-    #             return plot_lfs(cmds, n_bins = n_bins, axis = 1), plot_lfs(cmds, n_bins = n_bins, axis = 0)
-    #         return plot_lfs(cmds, n_bins = n_bins)
-
-    #def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, n_bins = 35):
-
-
-    def load_history(self, dbpath, id):
-        def fakesim(p):
-            return dict(null = p)
-
-        dummy_abc = pyabc.ABCSMC(fakesim, None, None, sampler = pyabc.sampler.SingleCoreSampler())
-
-        return dummy_abc.load("sqlite:///" + dbpath, id)
     
 if __name__ == '__main__':
     sw = StarWave()
     sw.params.pretty_print()
-
-# class StarWave_pyabc:
-#     """
-#     StarWave: fitting the stellar birth function of resolved stellar populations 
-#     with approximate Bayesian computation. 
-    
-#     """
-
-#     def __init__(self, bands = ['ACS_HRC_F606W', 'ACS_HRC_F814W'], imf_type = 'spl'):
-                    
-#         if isinstance(imf_type, (list, np.ndarray, tuple)):
-#             pass
-#         else:
-#             imf_type = [imf_type]
-
-#         self.imf_type = imf_type
-#         self.params = [make_params(imf) for imf in imf_type]
-#         self.bands = bands
-#         self.iso_int = minimint.Interpolator(bands)
-        
-#         print('initalized starwave with %s IMF and default priors' % imf_type)
-
-#     def init_scaler(self, observed_cmd, gamma = 0.5):
-#         self.cmd_scaler = MinMaxScaler()
-#         self.cmd_scaler.fit(observed_cmd);
-#         scaled_observed_cmd = self.cmd_scaler.transform(observed_cmd)
-#         Phi_approx = Nystroem(kernel = 'rbf', n_components=50, gamma = gamma) 
-#         Phi_approx.fit(scaled_observed_cmd)
-#         self.mapping = Phi_approx.transform
-#         print('scaler initialized and mapping defined!')
-#         return scaled_observed_cmd
-
-#     def get_cmd(self, nstars, gr_dict):
-
-#         age = 8 ## logAge, Incorporate this into GR_dict too along with Av, etc. Maybe replace with scipy objects? 
-#         feh = -1 ## same as above
-
-#         cmd = np.empty((nstars, len(self.bands)))
-#         cmd[:] = np.nan
-
-#         for ii in range(nstars):
-#             mass = gr_dict['logM'].sample(1)[0]
-#             age = age
-#             feh = feh
-#             binq = gr_dict['BinQ'].sample(1)[0]
-
-#             input_mag = get_absolute_mags(mass, age, feh, binq, self.iso_int, self.bands)
-
-#             cmd[ii, :] = input_mag
-
-#         nans = np.isnan(cmd).any(axis = 1)
-#         cmd = cmd[~nans]
-
-#         return cmd, cmd # make input and output
-
-        
-#         # weights = self.base_weights
-
-#         # keys = ['logM', 'BinQ']
-
-#         # for key in keys:
-#         #     new_prob = gr_dict[key].getpdf(self.simdf[key])
-#         #     weights = new_prob * weights
-        
-#         # weights = weights / np.nansum(weights)
-        
-#         # idx = np.random.choice(len(self.simdf), size = nstars, replace=True, p=weights)
-        
-#         # sel_df = self.simdf.iloc[idx]
-        
-#         # in_mags = sel_df[['input_mag1', 'input_mag2']].dropna().to_numpy()
-#         # out_mags = sel_df[['output_mag1', 'output_mag2']].dropna().to_numpy()
-
-#         #return in_mags, out_mags
-    
-#     def make_cmd(self, mags):
-#         return np.asarray( [mags[:,0] - mags[:,1], mags[:,1]] ).T
-
-#     def sample_cmd(self, params, model = 'spl'):
-
-#         for key in params.keys():
-#             if isinstance(params[key], torch.FloatTensor):
-#                 params[key] = params[key].detach().cpu().numpy()
-            
-#         if model == 'spl':
-#             gr_dict = {'logM':set_GR_spl(params['slope']), 'BinQ': set_GR_unif(params['bf'])}
-#         elif model == 'bpl':
-#             gr_dict = {'logM':set_GR_bpl(params['alow'], params['ahigh'], params['bm']),\
-#                        'BinQ': set_GR_unif(params['bf'])}
-#         elif model == 'ln':
-#             gr_dict = {'logM':set_GR_ln10full(params['mean'], params['sigma'], params['bm'], \
-#                     params['slope']), 'BinQ': set_GR_unif(params['bf'])}
-#         else:
-#             print('Unrecognized model!')
-        
-#         intensity = 10**params['log_int']
-#         nstars = int(stats.poisson.rvs(intensity))
-        
-#         j_in, j_out = self.get_cmd(nstars, gr_dict)
-#         cmd_in = np.asarray([j_in[:,0] - j_in[:,1], j_in[:,1]]).T
-#         cmd_out = np.asarray([j_out[:,0] - j_out[:,1], j_out[:,1]]).T
-#         return cmd_in, cmd_out
-
-#     def sample_norm_cmd(self, params, model = 'spl'):
-#         in_cmd, out_cmd = self.sample_cmd(params, model)
-#         if len(in_cmd) == 0 or len(out_cmd) == 0:
-#             return np.zeros((1000,2)), np.zeros((1000, 2))
-#         return self.cmd_scaler.transform(in_cmd), self.cmd_scaler.transform(out_cmd)
-
-#     def kernel_representation(self, P, mapping):
-#         Phi_P = mapping(P).sum(axis=0)
-#         return Phi_P
-
-#     def approx_kernel_distance(self, P, Q, mapping):
-#         Phi_P = self.kernel_representation(P, mapping)
-#         Phi_Q = self.kernel_representation(Q, mapping)
-#         return np.sqrt(np.sum((Phi_P - Phi_Q)**2))
-
-#     def exact_kernel_distance(self, P, Q, gamma):
-#         P = P[np.max(np.isfinite(P),1)]
-#         Q = Q[np.max(np.isfinite(Q),1)]
-#         PP = np.exp(- gamma*np.sum((P[:, None, :] - P[None, :, :])**2, axis=-1)).sum()
-#         QQ = np.exp(- gamma*np.sum((Q[:, None, :] - Q[None, :, :])**2, axis=-1)).sum()
-#         PQ = np.exp(- gamma*np.sum((P[:, None, :] - Q[None, :, :])**2, axis=-1)).sum()
-#         return np.sqrt(PP + QQ - 2 * PQ)
-
-#     def cmd_sim(self, params, imf_type):
-#         in_cmd, out_cmd = self.sample_norm_cmd(params, model = imf_type)
-#         return {'output': self.kernel_representation(out_cmd, self.mapping)}
-#         #'input': self.kernel_representation(in_cmd, self.mapping),
-#     def fit_cmd(self, observed_cmd, pop_size = 1000, max_n_pop = np.Inf, savename = 'starwave', min_acceptance_rate = 0.0001, gamma = 0.5, 
-#                     cores = 1, accept = 'uniform', alpha = 0.5, population_strategy = 'constant',
-#                     statistic = 'output'):
-
-
-#         if cores == 1:
-#             pyabc_sampler = pyabc.sampler.SingleCoreSampler()
-#         elif cores > 1:
-#             pyabc_sampler = pyabc.sampler.MulticoreEvalParallelSampler(n_procs = cores)
-#         else:
-#             print('invalid number of cores. defaulting to 1 core.')
-#             pyabc_sampler = pyabc.sampler.SingleCoreSampler()
-
-#         if population_strategy == 'constant':
-#             population_strategy = pyabc.populationstrategy.ConstantPopulationSize(pop_size)
-#         elif population_strategy == 'adapt':
-#             population_strategy = pyabc.populationstrategy.AdaptivePopulationSize(pop_size)
-
-
-#         scaled_observed_cmd = self.init_scaler(observed_cmd, gamma = gamma)
-
-#         obs = dict(output = self.kernel_representation(scaled_observed_cmd, self.mapping))
-
-#         dummy_cmd = np.zeros(observed_cmd.shape)
-        
-#         def simcmd(imf_type):
-#             return lambda params: self.cmd_sim(params, imf_type = imf_type)
-        
-#         simulator = [];
-#         prior = [];
-#         for idx,imf in enumerate(self.imf_type):
-#             simulator.append(simcmd(imf))
-#             prior.append(self.params[idx].to_pyabc())        
-
-
-#         if accept == 'uniform':
-#             acceptor = pyabc.acceptor.UniformAcceptor()
-#             eps = pyabc.epsilon.QuantileEpsilon(alpha = alpha)
-#             def distance(cmd1, cmd2):
-#                 return np.sqrt(np.sum((cmd1[statistic] - cmd2[statistic])**2))
-
-#         elif accept == 'stochastic':
-#             acceptor = pyabc.StochasticAcceptor()
-#             eps = pyabc.Temperature()
-#             base_params = make_params(self.imf_type[0]).get_values()
-#             sim_rep = np.asarray([self.cmd_sim(base_params, imf_type = self.imf_type[0])['output'] for ii in range(25)])
-#             var = np.var(sim_rep, 0)
-#             distance = pyabc.IndependentNormalKernel(var = var, keys = ['input'])
-
-#         abc = pyabc.ABCSMC(simulator, 
-#                             prior,
-#                             distance, 
-#                             sampler = pyabc_sampler,
-#                             population_size = pop_size, 
-#                             eps = eps,
-#                             acceptor = acceptor)
-
-#         db_path = ("sqlite:///" + savename + ".db")
-
-#         abc.new(db_path, obs);
-
-#         self.history = abc.run(min_acceptance_rate = min_acceptance_rate, max_nr_populations = max_n_pop)
-
-#         return self.history
-
-#     def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, kde = False, n_bins = 35, color = True):
-
-#         if imf_type == 'spl':
-#             simulator = self.cmd_sim_spl
-#         elif imf_type == 'bpl':
-#             simulator = self.cmd_sim_bpl
-#         elif imf_type == 'ln':
-#             simulator = self.cmd_sim_ln
-
-#         idxs = np.arange(len(df))
-#         post_samples = df.iloc[np.random.choice(idxs, size = n_samples, p = w)]
-
-#         self.cmd_scaler = MinMaxScaler()
-#         self.cmd_scaler.fit(observed_cmd)
-
-#         cmds = [self.cmd_scaler.inverse_transform(simulator(sample)['data']) for _,sample in post_samples.iterrows()]
-        
-#         if kde:
-#             return plot_lfs_kde(cmds)
-#         else:
-#             if color:
-#                 return plot_lfs(cmds, n_bins = n_bins, axis = 1), plot_lfs(cmds, n_bins = n_bins, axis = 0)
-#             return plot_lfs(cmds, n_bins = n_bins)
-
-#     #def gof_lf(self, df, w, observed_cmd, imf_type, n_samples = 25, n_bins = 35):
-
-
-#     def load_history(self, dbpath, id):
-#         def fakesim(p):
-#             return dict(null = p)
-
-#         dummy_abc = pyabc.ABCSMC(fakesim, None, None, sampler = pyabc.sampler.SingleCoreSampler())
-
-#         return dummy_abc.load("sqlite:///" + dbpath, id)
-    
-# if __name__ == '__main__':
-#     sw = StarWave()
-#     sw.params.pretty_print()
