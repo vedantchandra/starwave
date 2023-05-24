@@ -3,3 +3,4 @@ test*
 *.pyc
 *pycache*
 .spyproject/*
+*.ipynb_checkpoints*
