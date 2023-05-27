@@ -134,6 +134,8 @@ def make_params(imf_type, sfh_type): # add SFH TYPE
     
     ## ADD EXTINCTION WITH EXTINCT PACKAGE    
 
+    parameters['av'] = SWParameter('av', 0, [0, 1], fixed = True)
+
     if imf_type == 'spl':
         
         parameters['slope'] = SWParameter('slope', -2.3, [-4, -1])

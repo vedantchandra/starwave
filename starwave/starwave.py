@@ -26,6 +26,8 @@ from sbi.utils import user_input_checks
 from sbi.inference import SNPE, prepare_for_sbi, simulate_for_sbi
 from sbi.utils.get_nn_models import posterior_nn
 
+import extinction
+
 from joblib.externals.loky import set_loky_pickler
 set_loky_pickler("dill")
 
@@ -39,8 +41,8 @@ class StarWave:
     
     """
 
-    def __init__(self, isodf, asdf, bands, imf_type, sfh_type = 'gaussian',
-        sfh_grid = None):
+    def __init__(self, isodf, asdf, bands, band_lambdas, imf_type, sfh_type = 'gaussian',
+        sfh_grid = None, Rv = 3.1):
         """
         Initializes the StarWave object
         Parameters
@@ -88,9 +90,13 @@ class StarWave:
         self.lim_logmass = np.log(0.1)
         self.sfh_grid = sfh_grid
 
+        self.Rv = Rv
+        self.band_lambdas = band_lambdas
+
         self.debug = False
         
         print('initalized starwave with %s bands, %s IMF, and default priors' % (str(bands), imf_type))
+        print('using Rv = %.1f' % (self.Rv))
         print_prior_summary(self.params)
 
     def init_scaler(self, observed_cmd, gamma = 0.5):
@@ -363,10 +369,16 @@ class StarWave:
 
         intensity = 10**pdict['log_int']
         nstars = int(stats.poisson.rvs(intensity))
-        
+
+        exts = np.array([extinction.ccm89(np.array([band_lambda]),pdict['av'],self.Rv)[0] for band_lambda in self.band_lambdas])
+
         mags_in, mags_out = self.get_cmd(nstars, gr_dict)
+        mags_in += exts # apply extinction
+        mags_out += exts # apply extinction
+
         cmd_in = self.make_cmd(mags_in)
         cmd_out = self.make_cmd(mags_out)
+
         return cmd_in, cmd_out
 
     def sample_norm_cmd(self, params, model):
