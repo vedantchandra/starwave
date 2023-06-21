@@ -6,6 +6,7 @@ from typing import Optional, Union, Sequence
 from scipy import stats
 import torch
 import copy
+import logging
 
 class SWDist:
     def __init__(self, distribution):
@@ -25,6 +26,9 @@ class SWParameters(OrderedDict):
     ----------
     dict : dict
         dictionary of SWParameter objects
+
+    kwargs: dict
+        dictionary of keyword arguments
     
     Methods
     -------
@@ -37,10 +41,11 @@ class SWParameters(OrderedDict):
     
     """
     
-    def __init__(self, params_dict):
+    def __init__(self, params_dict, kwargs = None):
         
         super().__init__(params_dict)
         self.dict = params_dict
+        self.kwargs = kwargs
         
     def __getitem__(self, param):
          return self.dict[param]
@@ -53,7 +58,8 @@ class SWParameters(OrderedDict):
         return values_dict
     
     def summary(self):
-        print_prior_summary(self.dict)
+        if self.kwargs is not None:
+            print_prior_summary(self.dict, filename = self.kwargs.get('filename'),  verbose = self.kwargs.get('verbose'))
 
     def to_torch(self):
         return make_prior(self)
@@ -122,7 +128,7 @@ class SWParameter(OrderedDict):
         
         super().__init__(self.param_dict)
         
-def make_params(imf_type, sfh_type): # add SFH TYPE
+def make_params(imf_type, sfh_type, kwargs = None): # add SFH TYPE
     
     parameters = {};
     param_mapper = {};
@@ -164,7 +170,7 @@ def make_params(imf_type, sfh_type): # add SFH TYPE
     # for ii,parameter in enumerate(parameters.keys()):
     #     param_mapper[ii] = parameter
     # print(param_mapper)
-    return SWParameters(parameters)#, param_mapper
+    return SWParameters(parameters, kwargs = kwargs)#, param_mapper
 
 # def make_prior_pyabc(parameters):
     
@@ -201,22 +207,55 @@ def make_params(imf_type, sfh_type): # add SFH TYPE
 
 
 
-def print_prior_summary(parameters):
+def print_prior_summary(parameters, filename = None, verbose = True):
     
-    for name, param in parameters.items():
-        print('-'*10)
-        print(name)
-        print('-'*10)
-        print('Distribution: ', end =" ")
-        print(param.distribution)
-        print('Bounds: ', end =" ")
-        print(param.bounds)
-        print('Value: ', end =" ")
-        print(param.value)
-        print('Fixed: ', end =" ")
-        print(param.fixed)
-        print('dist_kwargs: ', end =" ")
-        print(param.dist_kwargs)
+    if verbose:
+        print('verbose')
+        for name, param in parameters.items():
+            print('-'*10)
+            print(name)
+            print('-'*10)
+            print('Distribution: ', end =" ")
+            print(param.distribution)
+            print('Bounds: ', end =" ")
+            print(param.bounds)
+            print('Value: ', end =" ")
+            print(param.value)
+            print('Fixed: ', end =" ")
+            print(param.fixed)
+            print('dist_kwargs: ', end =" ")
+            print(param.dist_kwargs)
+
+
+    if (filename is not None):  
+
+        logging.basicConfig(filename = filename,
+                    filemode = 'w', format = '%(message)s')
+ 
+        # Creating an object
+        logger = logging.getLogger()
+        
+        # Setting the threshold of logger to DEBUG
+        logger.setLevel(logging.INFO) 
+
+        print("Hi")
+        # with open(filename, 'w') as f:
+        #     print('Hi2')
+        for name, param in parameters.items():
+            logger.info('-'*10)
+            logger.info(name)
+            logger.info('-'*10)
+            logger.info('Distribution: ')
+            logger.info(param.distribution)
+            logger.info('Bounds: ')
+            logger.info(param.bounds)
+            logger.info('Value: ')
+            logger.info(param.value)
+            logger.info('Fixed: ')
+            logger.info(param.fixed)
+            logger.info('dist_kwargs: ')
+            logger.info(param.dist_kwargs)
+
 
 class MultipleIndependent(Distribution):
     """Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
