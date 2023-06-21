@@ -31,6 +31,8 @@ import extinction
 from joblib.externals.loky import set_loky_pickler
 set_loky_pickler("dill")
 
+import logging
+
 class StarWave:
     """
     StarWave: fitting the stellar birth function of resolved stellar populations 
@@ -42,7 +44,7 @@ class StarWave:
     """
 
     def __init__(self, isodf, asdf, bands, band_lambdas, imf_type, sfh_type = 'gaussian',
-        sfh_grid = None, Rv = 3.1):
+        sfh_grid = None, Rv = 3.1, params_kwargs = None):
         """
         Initializes the StarWave object
         Parameters
@@ -65,6 +67,9 @@ class StarWave:
             'mets' : array of M [Fe/H] grid points
 		    'ages' : array of A age (Gyr) grid points
 		    'probabilities' : M x A matrix with probability (or some weight) of each SFH bin
+        params_kwargs : dict
+            dictionary for printing/saving prior parameters
+
         """
 
         if sfh_type == 'grid' and sfh_grid is None:
@@ -73,7 +78,8 @@ class StarWave:
 
         self.imf_type = imf_type
         self.sfh_type = sfh_type
-        self.params = make_params(imf_type, sfh_type)
+        self.params_kwargs = params_kwargs
+        self.params = make_params(imf_type, sfh_type, self.params_kwargs)
         self.make_prior(self.params) ## INITIALIZE FIXED PARAMS VECTOR
         self.bands = bands
         self.iso_int = intNN.intNN(isodf, self.bands)
@@ -97,7 +103,7 @@ class StarWave:
         
         print('initalized starwave with %s bands, %s IMF, and default priors' % (str(bands), imf_type))
         print('using Rv = %.1f' % (self.Rv))
-        print_prior_summary(self.params)
+        self.params.summary()
 
     def init_scaler(self, observed_cmd, gamma = 0.5):
         """
