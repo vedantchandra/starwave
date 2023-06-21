@@ -24,11 +24,15 @@ class SWParameters(OrderedDict):
     
     Attributes
     ----------
-    dict : dict
+    params_dict : dict
         dictionary of SWParameter objects
 
     kwargs: dict
         dictionary of keyword arguments
+            - filename : str 
+                if not None, path to file that saves parameters
+            - verbose : boolean
+                if True, prints parameters to screen
     
     Methods
     -------
@@ -238,9 +242,6 @@ def print_prior_summary(parameters, filename = None, verbose = True):
         # Setting the threshold of logger to DEBUG
         logger.setLevel(logging.INFO) 
 
-        print("Hi")
-        # with open(filename, 'w') as f:
-        #     print('Hi2')
         for name, param in parameters.items():
             logger.info('-'*10)
             logger.info(name)

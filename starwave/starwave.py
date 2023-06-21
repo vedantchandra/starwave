@@ -68,7 +68,7 @@ class StarWave:
 		    'ages' : array of A age (Gyr) grid points
 		    'probabilities' : M x A matrix with probability (or some weight) of each SFH bin
         params_kwargs : dict
-            dictionary for print/save parameters
+            dictionary for printing/saving prior parameters
 
         """
 
