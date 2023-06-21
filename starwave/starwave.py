@@ -121,7 +121,7 @@ class StarWave:
         print('scaler initialized and mapping defined!')
         return scaled_observed_cmd
 
-    def get_cmd(self, nstars, gr_dict):
+    def get_cmd(self, nstars, gr_dict, pdict):
         """
         get a sampled CMD for a set of input parameters and total number of stars
         Parameters
@@ -130,6 +130,8 @@ class StarWave:
             total number of sampled stars
         gr_dict : dict
             dictionary containing the IMF parameter distributions as GeneralRandom objects
+        pdict : dict
+            dictionary containing the current starwave parameters
 
         Returns
         -------
@@ -165,6 +167,9 @@ class StarWave:
 
         if len(input_mags) == 0:
             return input_mags, input_mags
+
+        exts = np.array([extinction.ccm89(np.array([band_lambda]),pdict['av'],self.Rv)[0] for band_lambda in self.band_lambdas])
+        input_mags += exts
 
         idxs = self.kdtree.query(input_mags)[1][:, 0]
 
@@ -370,11 +375,7 @@ class StarWave:
         intensity = 10**pdict['log_int']
         nstars = int(stats.poisson.rvs(intensity))
 
-        exts = np.array([extinction.ccm89(np.array([band_lambda]),pdict['av'],self.Rv)[0] for band_lambda in self.band_lambdas])
-
-        mags_in, mags_out = self.get_cmd(nstars, gr_dict)
-        mags_in += exts # apply extinction
-        mags_out += exts # apply extinction
+        mags_in, mags_out = self.get_cmd(nstars, gr_dict, pdict)
 
         cmd_in = self.make_cmd(mags_in)
         cmd_out = self.make_cmd(mags_out)
