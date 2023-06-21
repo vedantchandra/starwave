@@ -103,9 +103,6 @@ class StarWave:
         
         print('initalized starwave with %s bands, %s IMF, and default priors' % (str(bands), imf_type))
         print('using Rv = %.1f' % (self.Rv))
-        print_prior_summary(self.params, filename = self.params_kwargs.get('filename'), verbose = self.params_kwargs.get('verbose'))
-        
-        print('other way')
         self.params.summary()
 
     def init_scaler(self, observed_cmd, gamma = 0.5):
