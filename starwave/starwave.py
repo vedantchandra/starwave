@@ -170,6 +170,8 @@ class StarWave:
         nans = (np.isnan(input_mags) + (input_mags < self.trgb)).any(axis = 1)
 
         input_mags = input_mags[~nans]
+        
+	BM_in = nans
 
         if len(input_mags) == 0:
             return input_mags, input_mags
@@ -185,8 +187,11 @@ class StarWave:
 
         output_mags = output_mags[~nans]
 
+	BM_out = nans
+	    
+        sdict = {'masses': masses, 'binqs': binqs, 'sfhs': sfhs, 'dms': dms, 'exts': exts, 'BM_in': BM_in, 'BM_out': BM_out}
 
-        return input_mags, output_mags 
+        return input_mags, output_mags, sdict 
     
     def make_cmd(self, mags):
         """
@@ -381,12 +386,12 @@ class StarWave:
         intensity = 10**pdict['log_int']
         nstars = int(stats.poisson.rvs(intensity))
 
-        mags_in, mags_out = self.get_cmd(nstars, gr_dict, pdict)
+        mags_in, mags_out, sdict = self.get_cmd(nstars, gr_dict, pdict)
 
         cmd_in = self.make_cmd(mags_in)
         cmd_out = self.make_cmd(mags_out)
 
-        return cmd_in, cmd_out
+        return cmd_in, cmd_out, sdict
 
     def sample_norm_cmd(self, params, model):
         """
@@ -402,7 +407,7 @@ class StarWave:
         list
             list of two arrays, one for the noiseless CMD and one for the noisy CMD, unit-scaled
         """
-        in_cmd, out_cmd = self.sample_cmd(params, model)
+        in_cmd, out_cmd, sdict = self.sample_cmd(params, model)
         if len(in_cmd) == 0 or len(out_cmd) == 0:
             print('empty cmd!')
             return self.dummy_cmd, self.dummy_cmd
