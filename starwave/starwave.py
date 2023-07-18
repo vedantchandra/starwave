@@ -253,7 +253,7 @@ class StarWave:
 
         if sfh_type == 'gaussian':
             cov = pdict['age_feh_corr'] * pdict['sig_age'] * pdict['sig_feh']
-            covmat = np.array([[pdict['sig_age'], cov], [cov, pdict['sig_feh']]])
+            covmat = np.array([[pdict['sig_age']**2, cov], [cov, pdict['sig_feh']**2]])
 
 
             if not isPD(covmat):
