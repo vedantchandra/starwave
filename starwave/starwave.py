@@ -147,10 +147,14 @@ class StarWave:
         input_mags = np.empty((nstars, len(self.bands)))
         input_mags[:] = np.nan
 
+	exts = np.empty((nstars, len(self.bands)))
+        exts[:] = np.nan
+
         masses = gr_dict['logM'].sample(nstars)
         binqs = gr_dict['BinQ'].sample(nstars)
         sfhs = gr_dict['SFH'].sample(nstars)
         dms = gr_dict['DM'].sample(nstars)
+	avs = gr_dict['av'].sample(nstars)
 
 
         for ii in range(nstars):
@@ -159,6 +163,7 @@ class StarWave:
             binq = binqs[ii]
             age, feh = sfhs[ii]
             dm = dms[ii]
+	    av = avs[ii]
 
             if mass < self.lim_logmass or np.isnan(age) or np.isnan(feh):
                 continue
@@ -167,16 +172,20 @@ class StarWave:
 
             input_mags[ii, :] = input_mag + dm
 
+	    exts[ii,:] = np.array([extinction.ccm89(np.array([band_lambda]),av,self.Rv)[0] for band_lambda in self.band_lambdas])
+
+
         nans = (np.isnan(input_mags) + (input_mags < self.trgb)).any(axis = 1)
 
         input_mags = input_mags[~nans]
+
+	exts = exts[~nans]
         
 	BM_in = nans
 
         if len(input_mags) == 0:
             return input_mags, input_mags
 
-        exts = np.array([extinction.ccm89(np.array([band_lambda]),pdict['av'],self.Rv)[0] for band_lambda in self.band_lambdas])
         input_mags += exts
 
         idxs = self.kdtree.query(input_mags)[1][:, 0]
@@ -382,7 +391,8 @@ class StarWave:
         gr_dict['BinQ'] = set_GR_unif(pdict['bf'])
         gr_dict['SFH'] = self.set_sfh_dist(pdict, self.sfh_type)
         gr_dict['DM'] = SWDist(stats.norm(loc = pdict['dm'], scale = pdict['sig_dm']))
-
+	gr_dict['av'] = SWDist(stats.norm(loc = pdict['av'], scale = pdict['sig_av']))
+	    
         intensity = 10**pdict['log_int']
         nstars = int(stats.poisson.rvs(intensity))
 
