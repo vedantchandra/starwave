@@ -145,6 +145,7 @@ def make_params(imf_type, sfh_type, kwargs = None): # add SFH TYPE
     ## ADD EXTINCTION WITH EXTINCT PACKAGE    
 
     parameters['av'] = SWParameter('av', 0, [0, 1], fixed = True)
+    parameters['sig_av'] = SWParameter('sig_av', 0.015, [0, 1], fixed = True)
 
     if imf_type == 'spl':
         
