@@ -9,11 +9,15 @@ dependencies:
   - pandas
   - matplotlib
   - numpy
+  - numba
   - nb_conda
   - jupyter
+  - extinction
   - pip
   - pip:
     - pyabc
     - getdist
-prefix: /Users/vedantchandra/opt/anaconda3/envs/starwave
-
+    - torch
+    - sbi
+    - dill
+    - corner
