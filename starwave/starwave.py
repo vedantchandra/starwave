@@ -147,10 +147,14 @@ class StarWave:
         input_mags = np.empty((nstars, len(self.bands)))
         input_mags[:] = np.nan
 
+	exts = np.empty((nstars, len(self.bands)))
+        exts[:] = np.nan
+
         masses = gr_dict['logM'].sample(nstars)
         binqs = gr_dict['BinQ'].sample(nstars)
         sfhs = gr_dict['SFH'].sample(nstars)
         dms = gr_dict['DM'].sample(nstars)
+	avs = gr_dict['av'].sample(nstars)
 
 
         for ii in range(nstars):
@@ -159,6 +163,7 @@ class StarWave:
             binq = binqs[ii]
             age, feh = sfhs[ii]
             dm = dms[ii]
+	    av = avs[ii]
 
             if mass < self.lim_logmass or np.isnan(age) or np.isnan(feh):
                 continue
@@ -167,14 +172,20 @@ class StarWave:
 
             input_mags[ii, :] = input_mag + dm
 
+	    exts[ii,:] = np.array([extinction.ccm89(np.array([band_lambda]),av,self.Rv)[0] for band_lambda in self.band_lambdas])
+
+
         nans = (np.isnan(input_mags) + (input_mags < self.trgb)).any(axis = 1)
 
         input_mags = input_mags[~nans]
 
+	exts = exts[~nans]
+        
+	BM_in = nans
+
         if len(input_mags) == 0:
             return input_mags, input_mags
 
-        exts = np.array([extinction.ccm89(np.array([band_lambda]),pdict['av'],self.Rv)[0] for band_lambda in self.band_lambdas])
         input_mags += exts
 
         idxs = self.kdtree.query(input_mags)[1][:, 0]
@@ -185,8 +196,11 @@ class StarWave:
 
         output_mags = output_mags[~nans]
 
+	BM_out = nans
+	    
+        sdict = {'masses': masses, 'binqs': binqs, 'sfhs': sfhs, 'dms': dms, 'exts': exts, 'BM_in': BM_in, 'BM_out': BM_out}
 
-        return input_mags, output_mags 
+        return input_mags, output_mags, sdict 
     
     def make_cmd(self, mags):
         """
@@ -377,16 +391,17 @@ class StarWave:
         gr_dict['BinQ'] = set_GR_unif(pdict['bf'])
         gr_dict['SFH'] = self.set_sfh_dist(pdict, self.sfh_type)
         gr_dict['DM'] = SWDist(stats.norm(loc = pdict['dm'], scale = pdict['sig_dm']))
-
+	gr_dict['av'] = SWDist(stats.norm(loc = pdict['av'], scale = pdict['sig_av']))
+	    
         intensity = 10**pdict['log_int']
         nstars = int(stats.poisson.rvs(intensity))
 
-        mags_in, mags_out = self.get_cmd(nstars, gr_dict, pdict)
+        mags_in, mags_out, sdict = self.get_cmd(nstars, gr_dict, pdict)
 
         cmd_in = self.make_cmd(mags_in)
         cmd_out = self.make_cmd(mags_out)
 
-        return cmd_in, cmd_out
+        return cmd_in, cmd_out, sdict
 
     def sample_norm_cmd(self, params, model):
         """
@@ -402,7 +417,7 @@ class StarWave:
         list
             list of two arrays, one for the noiseless CMD and one for the noisy CMD, unit-scaled
         """
-        in_cmd, out_cmd = self.sample_cmd(params, model)
+        in_cmd, out_cmd, sdict = self.sample_cmd(params, model)
         if len(in_cmd) == 0 or len(out_cmd) == 0:
             print('empty cmd!')
             return self.dummy_cmd, self.dummy_cmd
